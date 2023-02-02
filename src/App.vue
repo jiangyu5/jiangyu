@@ -28,7 +28,7 @@ import DirectoryNav from "./components/DirectoryNav.vue";
 }
 
 main {
-  min-height: calc(100vh - 57.68px);
+  min-height: calc(100vh - 69.52px);
 }
 
 .directory-nav,

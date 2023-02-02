@@ -11,8 +11,8 @@ const props = defineProps({
   <div class="articles-aside">
     <h3>相关笔记</h3>
     <ul>
-      <li v-for="link in props.data.files">
-        <router-link :to="link.path">{{ link.name }}</router-link>
+      <li v-for="i in props.data">
+        <router-link :to="i.path">{{ i.name }}</router-link>
       </li>
     </ul>
   </div>

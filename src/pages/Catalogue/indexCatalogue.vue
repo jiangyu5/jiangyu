@@ -4,18 +4,17 @@ import ajax from "../../hook/ajax";
 import LinkCard from "../../components/LinkCard.vue";
 
 const data = reactive({
-  children: [],
-  count: 0,
+  files: [],
   navActive: 0,
 });
 
 const showFiles = computed(() => {
-  return data.children.length ? data.children[data.navActive]["files"] : null;
+  return data.files.length ? data.files[data.navActive]["files"] : null;
 });
 
-ajax("/notebook/index.json").then((res) => {
+ajax("data/notebook/index.json").then((res) => {
   let jsonParse = JSON.parse(res);
-  data.children = jsonParse["children"];
+  data.files = jsonParse["files"];
   data.count = jsonParse["count"];
 });
 
@@ -32,7 +31,7 @@ function navActiveClass(index) {
   <div class="catalogue">
     <ul class="catalogue-nav">
       <li
-        v-for="(catalogue, index) in data.children"
+        v-for="(catalogue, index) in data.files"
         @click="navActiveChange(index)"
         :class="navActiveClass(index)"
       >

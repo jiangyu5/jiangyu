@@ -1,4 +1,6 @@
 <script setup>
+import { watch, ref, computed, reactive, onMounted, onUnmounted } from "vue";
+
 const props = defineProps({
   catologue: {
     type: String,
@@ -22,16 +24,38 @@ const props = defineProps({
     default: false,
   },
 });
+
+const introductionStyle = reactive({
+  transform: 0,
+});
+const cardTop = ref(0);
+
+watch(cardTop, (top) => {
+  let height = window.innerHeight;
+  if (top > height / 2 || top < -(height / 4)) return;
+  introductionStyle.transform = `translateX(${(30 * top) / (height / 2)}%)`;
+});
+
+const Card = ref(null);
+function cardTopListener() {
+  cardTop.value = Card.value.getBoundingClientRect().top;
+}
+onMounted(() => {
+  window.addEventListener("scroll", cardTopListener);
+});
+onUnmounted(() => {
+  window.removeEventListener("scroll", cardTopListener);
+});
 </script>
 
 <template>
-  <div class="introductory-card" :class="{ reverse: reverse }">
+  <div class="introductory-card" :class="{ reverse: reverse }" ref="Card">
     <div class="container">
       <div class="left img">
         <div v-if="!imgUrl"></div>
         <img v-else :src="imgUrl" alt="图片" />
       </div>
-      <div class="right introduction">
+      <div class="right introduction" :style="introductionStyle">
         <h5>{{ props.catologue }}</h5>
         <h2>{{ props.title }}</h2>
         <div>
@@ -46,7 +70,7 @@ const props = defineProps({
 <style scoped lang="less">
 @marginBig: 3rem;
 .introductory-card {
-  height: calc(100vh);
+  height: 100vh;
   padding-top: 26px;
   padding-left: 0.5em;
   padding-right: 0.5em;
@@ -78,7 +102,7 @@ const props = defineProps({
     }
 
     .introduction {
-      min-width: calc(260px + @marginBig);
+      min-width: calc(200px + @marginBig);
       display: grid;
       grid-template-rows: auto auto 1fr auto;
       text-align: left;
@@ -165,7 +189,6 @@ const props = defineProps({
       .introduction {
         min-width: calc(400px + @marginBig);
         border-radius: 10px;
-        // min-width: calc(100% - @marginBig - 0.5em);
       }
     }
   }

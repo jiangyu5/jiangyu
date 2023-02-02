@@ -1,0 +1,90 @@
+[
+  {
+    "catologue": "常用",
+    "links": [
+      { "link": "哔哩哔哩", "url": "", "description": "" },
+      { "link": "有道词典", "url": "https://youdao.com/", "description": "" },
+      {
+        "link": "Unsplash",
+        "url": "https://unsplash.com/images",
+        "description": ""
+      },
+      {
+        "link": "Pdf24",
+        "url": "https://tools.pdf24.org/zh/",
+        "description": ""
+      }
+    ]
+  },
+
+  {
+    "catologue": "前端",
+    "links": [
+      {
+        "link": "MDN",
+        "url": "https://developer.mozilla.org/zh-CN/",
+        "description": ""
+      },
+      { "link": "Vue", "url": "https://cn.vuejs.org/", "description": "" },
+      {
+        "link": "React",
+        "url": "https://react.docschina.org/",
+        "description": ""
+      },
+      { "link": "Vite", "url": "https://cn.vitejs.dev/", "description": "" },
+      {
+        "link": "webpack",
+        "url": "https://www.webpackjs.com/",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "catologue": "工具",
+    "links": [
+      {
+        "link": "Node.js 文档",
+        "url": "https://nodejs.dev/zh-cn/learn/",
+        "description": ""
+      },
+      {
+        "link": "Git 文档",
+        "url": "https://git-scm.com/book/zh/v2",
+        "description": ""
+      },
+      { "link": "GitHub", "url": "https://github.com/", "description": "" },
+      { "link": "Gitee", "url": "https://gitee.com/", "description": "" }
+    ]
+  },
+  {
+    "catologue": "Python",
+    "links": [
+      {
+        "link": "Python",
+        "url": "https://www.python.org/",
+        "description": ""
+      },
+      {
+        "link": "Flask",
+        "url": "https://flask.palletsprojects.com/en/latest/",
+        "description": ""
+      },
+      {
+        "link": "Django",
+        "url": "https://docs.djangoproject.com/zh-hans/4.1/",
+        "description": ""
+      },
+      { "link": "Numpy", "url": "https://numpy.org/", "description": "" },
+      {
+        "link": "Pandas",
+        "url": "https://pandas.pydata.org/",
+        "description": ""
+      },
+      {
+        "link": "Matplotlib",
+        "url": "https://matplotlib.org/",
+        "description": ""
+      }
+    ]
+  }
+]

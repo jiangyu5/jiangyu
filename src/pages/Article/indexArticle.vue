@@ -6,129 +6,127 @@ import ajax from "../../hook/ajax";
 import { marked } from "marked";
 import "../../assets/css/markdownstyle.less";
 
-import { ref, reactive, computed, watch, onUnmounted } from "vue";
+import {
+  ref,
+  reactive,
+  watch,
+  onMounted,
+  onUnmounted,
+  computed,
+  nextTick,
+} from "vue";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
-const aside = ref([]); // 左侧的相关文件列表
-const htmlText = ref("");
-const articleTitle = ref("");
-const titles = computed(() => {
-  let matchTitles = htmlText.value.match(/<h\d id=(.*)<\/h\d>/g);
-  if (matchTitles) {
-    return matchTitles.map((e) => {
-      let temp = e.match(/(h\d) id="(.*?)"/);
-      return {
-        title: temp[2],
-        h: temp[1],
-      };
-    });
-  }
-  return [];
+const dirInfo = reactive({}); // 文件夹数据,该数据还未用到
+const aside = computed(() => {
+  return dirInfo["files"];
 });
 
-// 阅读进度
-const ArticleMain = ref();
-const readingProgress = reactive({
-  titlesDomArray: [],
-  titleIndex: 0,
-  titlesLength: 0,
+const articleData = reactive({
+  title: "",
+  content: "",
 });
-
-// 跳转切换 这里需要整理
+// 更新 articleData 和 dirInfo 数据
 watch(
-  () => route.fullPath,
+  () => route.path,
   (to, from) => {
-    if (to.indexOf("notebook") == -1) return;
-
-    let indexJsonUrl = to;
-    let mdUrl = to;
-    let indexChange = true;
-
-    if (to.indexOf(".md") != -1) {
-      indexJsonUrl = to.split("/").slice(0, -1).join("/");
-      indexChange =
-        from && from.split("/").slice(0, -1).join("/") == indexJsonUrl
-          ? false
-          : true;
+    if (!to.startsWith("/notebook")) return;
+    let articleUrl = "";
+    if (to.includes(".md")) {
+      articleUrl = to;
+      articleData.title = decodeURIComponent(
+        to.slice(to.lastIndexOf("/") + 1, -3)
+      );
     } else {
-      mdUrl = to + "/index.md";
+      articleData.title = decodeURIComponent(to.slice(to.lastIndexOf("/") + 1));
+      articleUrl = to + "/index.md";
     }
 
-    // 文档标题
-    articleTitle.value = decodeURIComponent(to)
-      .replace(".md", "")
-      .split("/")
-      .pop();
-
-    // 请求文档
-    ajax(mdUrl)
+    ajax(articleUrl)
       .then((res) => {
-        htmlText.value = marked(res);
+        articleData.content = marked(res);
       })
       .then(() => {
-        // 获取 reading process 需要的数据
-        readingProgress.titlesDomArray = ArticleMain.value.querySelectorAll(
-          "h1, h2, h3, h4, h5, h6"
-        ); // 替换操作
-        readingProgress.titlesLength = readingProgress.titlesDomArray.length;
-        return readingProgress.titlesLength;
-      })
-      .then((titlesLength) => {
-        // 添加监听事件
-        window.removeEventListener("scroll", readingProgressListener);
-
-        if (titlesLength > 1) {
-          window.addEventListener("scroll", readingProgressListener);
-        }
+        progress.init();
       });
 
-    // 同级目录是否刷新
-    if (indexChange) {
-      ajax(indexJsonUrl + "/index.json").then((res) => {
-        aside.value = JSON.parse(res);
+    let fromParent = from ? from.split("/").slice(0, -1) : from;
+    let toParent = articleUrl.split("/").slice(0, -1);
+    if (fromParent != toParent) {
+      ajax("/data/" + toParent.join("/") + "/index.json").then((res) => {
+        Object.assign(dirInfo, JSON.parse(res));
       });
     }
   },
-  {
-    immediate: true,
-  }
+  { immediate: true }
 );
 
-const hallfClientHeight = window.innerHeight / 2;
-function readingProgressListener() {
-  if (readingProgress.titlesLength - 1 > readingProgress.titleIndex) {
-    let topPre =
-      readingProgress.titlesDomArray[
-        readingProgress.titleIndex + 1
-      ].getBoundingClientRect().top;
+// 文档所有标题
+const titles = computed(() => {
+  let matchTitles = articleData.content.match(/<h\d id=(.*)<\/h\d>/g);
+  if (!matchTitles) return [];
+  return matchTitles.map((e) => {
+    let temp = e.match(/(h\d) id="(.*?)"/);
+    return {
+      title: temp[2],
+      h: temp[1],
+    };
+  });
+});
 
-    if (topPre && topPre < hallfClientHeight) {
-      readingProgress.titleIndex += 1;
-    }
-  }
-
-  if (readingProgress.titleIndex > 0) {
-    let topCurrent =
-      readingProgress.titlesDomArray[
-        readingProgress.titleIndex
-      ].getBoundingClientRect().top;
-
-    if (topCurrent && topCurrent >= hallfClientHeight) {
-      readingProgress.titleIndex -= 1;
-    }
-  }
-}
+// 阅读进度与锚点
+// 需要完善视口的判定
+const ArticleMain = ref();
+const progress = {
+  doms: [],
+  index: ref(0),
+  length: 0,
+  viewHeight: window.innerHeight / 2,
+  init() {
+    // 路由变化时,接收完数据后触发
+    this.doms = ArticleMain.value.querySelectorAll("h1, h2, h3, h4, h5, h6");
+    this.index.value = 0;
+    this.length = this.doms.length;
+  },
+  changeIndex(index) {
+    this.index.value = index;
+    this.doms[this.index.value].scrollIntoView(true);
+  },
+  titleTop() {
+    return this.doms[this.index.value].getBoundingClientRect().top;
+  },
+  titleBottom() {
+    return this.doms[this.index.value].getBoundingClientRect().bottom;
+  },
+  viewUp() {
+    if (this.index.value >= this.length - 1) return;
+    if (this.titleBottom() < this.viewHeight) this.index.value++;
+  },
+  viewDown() {
+    if (this.index.value <= 0) return;
+    if (this.titleTop() > this.viewHeight) this.index.value--;
+  },
+  listener() {
+    this.viewUp();
+    this.viewDown();
+  },
+};
 
 function changeTitleIndex(index) {
-  readingProgress.titlesDomArray[index].scrollIntoView({
-    block: "center",
-  });
-  readingProgress.titleIndex = index;
+  progress.changeIndex(index);
 }
 
+function progressListener() {
+  progress.listener();
+}
+
+onMounted(() => {
+  window.addEventListener("scroll", progressListener);
+});
+
 onUnmounted(() => {
-  window.removeEventListener("scroll", readingProgressListener);
+  window.removeEventListener("scroll", progressListener);
 });
 </script>
 
@@ -136,14 +134,18 @@ onUnmounted(() => {
   <div class="article">
     <ArticlesAside :data="aside"></ArticlesAside>
     <div class="article-main">
-      <div class="article-main-header">{{ articleTitle }}</div>
-      <div class="markdownstyle" v-html="htmlText" ref="ArticleMain"></div>
+      <div class="article-main-header">{{ articleData.title }}</div>
+      <div
+        class="markdownstyle"
+        v-html="articleData.content"
+        ref="ArticleMain"
+      ></div>
     </div>
 
     <ArticleTitlesAside
-      @return-title-index="changeTitleIndex"
       :titles="titles"
-      :active-title-index="readingProgress.titleIndex"
+      :active-title-index="progress.index.value"
+      @change-title-index="changeTitleIndex"
     ></ArticleTitlesAside>
   </div>
 </template>

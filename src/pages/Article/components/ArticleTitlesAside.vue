@@ -10,9 +10,10 @@ const props = defineProps({
   },
 });
 
-const emits = defineEmits(["returnTitleIndex"]);
+const emits = defineEmits(["changeTitleIndex"]);
 function gotoAnchor(index) {
-  emits("returnTitleIndex", index);
+    emits("changeTitleIndex", index);
+  return "";
 }
 </script>
 
@@ -37,7 +38,7 @@ function gotoAnchor(index) {
   .article-catalog-header {
     font-weight: 600;
     font-size: 1.5em;
-    margin-bottom: .5em;
+    margin-bottom: 0.5em;
   }
 
   ul {

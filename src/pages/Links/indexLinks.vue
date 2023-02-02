@@ -1,66 +1,11 @@
 <script setup>
-const data = [
-  {
-    catologue: "常用",
-    links: [
-      { link: "哔哩哔哩", url: "", description: "" },
-      { link: "有道词典", url: "https://youdao.com/", description: "" },
-      { link: "Unsplash", url: "https://unsplash.com/images", description: "" },
-      { link: "Pdf24", url: "https://tools.pdf24.org/zh/", description: "" },
-    ],
-  },
+import ajax from "../../hook/ajax";
+import { ref } from "vue";
 
-  {
-    catologue: "前端",
-    links: [
-      {
-        link: "MDN",
-        url: "https://developer.mozilla.org/zh-CN/",
-        description: "",
-      },
-      { link: "Vue", url: "https://cn.vuejs.org/", description: "" },
-      { link: "React", url: "https://react.docschina.org/", description: "" },
-      { link: "Vite", url: "https://cn.vitejs.dev/", description: "" },
-      { link: "webpack", url: "https://www.webpackjs.com/", description: "" },
-    ],
-  },
-  {
-    catologue: "工具",
-    links: [
-      {
-        link: "Node.js 文档",
-        url: "https://nodejs.dev/zh-cn/learn/",
-        description: "",
-      },
-      {
-        link: "Git 文档",
-        url: "https://git-scm.com/book/zh/v2",
-        description: "",
-      },
-      { link: "GitHub", url: "https://github.com/", description: "" },
-      { link: "Gitee", url: "https://gitee.com/", description: "" },
-    ],
-  },
-  {
-    catologue: "Python",
-    links: [
-      { link: "Python", url: "https://www.python.org/", description: "" },
-      {
-        link: "Flask",
-        url: "https://flask.palletsprojects.com/en/latest/",
-        description: "",
-      },
-      {
-        link: "Django",
-        url: "https://docs.djangoproject.com/zh-hans/4.1/",
-        description: "",
-      },
-      { link: "Numpy", url: "https://numpy.org/", description: "" },
-      { link: "Pandas", url: "https://pandas.pydata.org/", description: "" },
-      { link: "Matplotlib", url: "https://matplotlib.org/", description: "" },
-    ],
-  },
-];
+const data = ref([]);
+ajax("/data/links/links.json").then((res) => {
+  data.value = JSON.parse(res);
+});
 </script>
 
 <template>
@@ -69,7 +14,7 @@ const data = [
       <h3>{{ obj.catologue }}</h3>
       <ul>
         <li v-for="link in obj.links">
-          <a :href="link.url">{{ link.link }}</a>
+          <a :href="link.url" target="_blank">{{ link.link }}</a>
         </li>
       </ul>
     </div>
@@ -78,21 +23,59 @@ const data = [
 
 <style scoped lang="less">
 .links {
-  //   width: fit-content;
   display: flex;
   flex-flow: row wrap;
   justify-items: center;
-//   justify-content: center;
   gap: 2em;
-  padding: 1em 3em;
-  height: 65vh;
+  padding: 2em;
 
   .links-wrapper {
-    width: 150px;
-    padding: 1rem;
+    min-width: 150px;
+    display: flex;
+    flex-flow: column nowrap;
 
     h3 {
-      margin-bottom: 0.5em;
+      line-height: 2em;
+      padding-left: 0.5em;
+      background-color: #a9c9ff94;
+      background-image: linear-gradient(135deg, #a9c9ff92 0%, #ffbbec92 100%);
+      color: #fff;
+      text-shadow: 1px 1px 0 rgb(81, 81, 81);
+      box-shadow: 1px 2px 10px #c0c0c06d;
+      border-radius: 6px;
+    }
+
+    ul {
+      margin-top: 5px;
+      flex: 1 auto;
+      padding: 0.5em 16px 0.6em;
+      box-shadow: 1px 2px 10px #c0c0c06d;
+      border-radius: 6px;
+
+
+      li {
+        &:hover {
+          a {
+            transform: translateX(5px);
+            // padding-left: 1em;
+            background-color: #a9c9ff94;
+            background-image: linear-gradient(
+              135deg,
+              #a9c9ff92 0%,
+              #ffbbec92 100%
+            );
+          }
+        }
+        a {
+          display: block;
+          padding: 3px;
+          font-size: 0.9em;
+          color: inherit;
+          border-bottom: 1px solid;
+          border-image: linear-gradient(135deg, #a9c9fffc 0%, #ffbbec 100%) 1;
+          transition: all 0.2s;
+        }
+      }
     }
   }
 }

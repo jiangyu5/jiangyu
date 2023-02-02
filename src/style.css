@@ -13,13 +13,13 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 
-  cursor: url(/src/assets/cursor/normal.cur), pointer;
+  /* cursor: url(/src/assets/cursor/normal.cur), pointer; */
 }
 
-a,
+/* a,
 li {
   cursor: url(/src/assets/cursor/normal.cur), pointer !important;
-}
+} */
 
 ::-webkit-progress-bar {
   width: 7px;

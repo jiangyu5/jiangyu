@@ -5,7 +5,7 @@ import Nav from "./Nav.vue";
 
 <template>
   <div class="header">
-    <h1>好梦由来最易醒</h1>
+    <h1>张航的主页</h1>
     <!-- <SearchInput size="mini"></SearchInput> -->
     <Nav></Nav>
   </div>
@@ -17,8 +17,8 @@ import Nav from "./Nav.vue";
   h1 {
     font-size: 1.8em;
     line-height: 1.2em;
-    background: url("../assets/bg_header.jpg") no-repeat
-      center;
+    background-color: #a9c9ff;
+    background-image: linear-gradient(135deg, #a9c9fffc 0%, #ffbbec 50%, #de70ff 100%);
     background-clip: text;
     -webkit-background-clip: text;
     background-size: cover;

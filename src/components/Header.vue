@@ -1,6 +1,5 @@
 <script setup>
 import Nav from "./Nav.vue";
-
 </script>
 
 <template>
@@ -17,8 +16,8 @@ import Nav from "./Nav.vue";
   h1 {
     font-size: 1.8em;
     line-height: 1.2em;
-    background-color: #a9c9ff;
-    background-image: linear-gradient(135deg, #a9c9fffc 0%, #ffbbec 50%, #de70ff 100%);
+    background-color: #3333;
+    background: url("../assets/bg_header.jpg") no-repeat center;
     background-clip: text;
     -webkit-background-clip: text;
     background-size: cover;

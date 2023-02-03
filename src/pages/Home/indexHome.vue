@@ -1,13 +1,19 @@
 <script setup>
 import IntroductoryCard from "./components/IntroductoryCard.vue";
 
-import defaultImg from "../../assets/bg_header.jpg";
 import HomeTop from "./components/HomeTop.vue";
+import { ref, watch, computed, onMounted, onUnmounted } from "vue";
+
+const clientHeight = ref(0);
+function resizeHeightListener() {
+  clientHeight.value =
+    window.innerHeight || document.documentElement.clientHeight;
+}
 
 const cards = [
   {
-    title: "文档目录",
-    catologue: "文档",
+    title: "文档",
+    catologue: "笔记本",
     url: "notebook/",
     introduction:
       "这里是我的笔记本，对所学习的内容进行了选择性地复制粘贴，一点点只适合自己的理解上的修改。文档简洁，能够帮助我快速复习知识点。同时，这里也对笔记本的使用进行了不必要的简单说明。",
@@ -28,7 +34,7 @@ const cards = [
     title: "关于",
     catologue: "导航",
     url: "about",
-    introduction: "本站所使用到的图片等素材，都会在关于页标注来源。",
+    introduction: "或许，这里会很酷。",
   },
 ];
 
@@ -38,19 +44,97 @@ cards.forEach((e, index) => {
   } else {
     e["reverse"] = false;
   }
-  e["imgUrl"] = defaultImg;
+//   e["imgUrl"] = defaultImg;
+  e["num"] = index;
+});
+
+const viewProgress = {
+  offsetTop: [0],
+  elements: [],
+  index: 0,
+  length: 0,
+  scrollY: ref(0),
+  _toviewIng: false,
+  correctIndex() {
+    let correction = Math.floor(window.scrollY / window.innerHeight);
+    if ( correction == this.index) return;
+    this.index = correction;
+  },
+  correctIndexUp() {
+    let correction = Math.floor(window.scrollY / window.innerHeight);
+    if (correction == this.index) return false;
+    this.index = correction;
+    return true;
+  },
+  addIndex() {
+    let correction = Math.floor(window.scrollY / window.innerHeight) + 1;
+    if (correction >= this.length || correction == this.index) return false;
+    this.index = correction;
+    return true;
+  },
+  scrollTo() {
+    window.scrollTo({
+      top: this.index == 0 ? 0 : this.elements[this.index].offsetTop,
+      behavior: "smooth",
+    });
+  },
+  toView() {
+    // console.log('before', this.index)
+    if (this._toviewIng || !this.addIndex()) return;
+    this.scrollTo();
+    this._toviewIng = true;
+    setTimeout(() => {
+      this._toviewIng = false;
+      this.correctIndex()
+    }, 600);
+  },
+  toUpView() {
+    if (!this.correctIndexUp()) return;
+    // this.scrollTo();
+  },
+};
+
+watch(
+  () => viewProgress.scrollY.value,
+  (top, preTop) => {
+    if (top > preTop) {
+      viewProgress.toView();
+      return;
+    }
+    viewProgress.toUpView();
+  }
+);
+
+function scrollListerner() {
+  viewProgress.scrollY.value = window.scrollY;
+}
+
+const CardsView = ref(null);
+const Home = ref(null);
+onMounted(() => {
+  let homeChildren = Home.value.children;
+  let ls = [homeChildren[0], ...homeChildren[1].children];
+  ls.forEach((e) => {
+    viewProgress.elements.push(e);
+    viewProgress.length++;
+  });
+  window.addEventListener("scroll", scrollListerner);
+});
+onUnmounted(() => {
+  window.removeEventListener("scroll", scrollListerner);
 });
 </script>
 
 <template>
-  <div class="home">
+  <div class="home" ref="Home">
     <HomeTop />
     <div ref="CardsView">
-      <IntroductoryCard v-for="card in cards" v-bind="card" />
+      <IntroductoryCard
+        v-for="card in cards"
+        v-bind="card"
+      />
     </div>
   </div>
 </template>
 
-<style scoped lang="less">
-
-</style>
+<style scoped lang="less"></style>

@@ -23,17 +23,47 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  num: {
+    type: Number,
+    default: 0,
+  },
 });
 
 const introductionStyle = reactive({
-  transform: 0,
+  transform: "",
 });
-const cardTop = ref(0);
+const decorationStyle = reactive({
+  transform: "",
+});
+const decorationClass = computed(() => {
+  const decoration = [
+    "decoration-rectangle",
+    "decoration-triangle",
+    "decoration-circle",
+    "decoration-irregular",
+  ]; // 保持偶数项，否则，因为图形不对称，reserver 难看，待修改
 
+  let length = decoration.length;
+  if (props.num < length) return decoration[props.num];
+  return decoration[props.num % length];
+});
+// 未传入图片时的背景
+const imgBg = computed(() => {
+  const decoration = ["img_bg_1", "img_bg_2", "img_bg_3", "img_bg_4"]; // 保持偶数项，否则，因为图形不对称，reserver 难看，待修改
+
+  let length = decoration.length;
+  if (props.num < length) return decoration[props.num];
+  return decoration[props.num % length];
+});
+
+// 介绍部分的动画效果
+const cardTop = ref(0); // scroll 卷起部分
 watch(cardTop, (top) => {
   let height = window.innerHeight;
-  if (top > height / 2 || top < -(height / 4)) return;
-  introductionStyle.transform = `translateX(${(30 * top) / (height / 2)}%)`;
+  if (top >= height / 2 || top <= -height) return;
+  let translateXValue = (top * 25) / height;
+  if (props.reverse) translateXValue *= -1;
+  introductionStyle.transform = `translateX(${translateXValue}%)`;
 });
 
 const Card = ref(null);
@@ -52,7 +82,7 @@ onUnmounted(() => {
   <div class="introductory-card" :class="{ reverse: reverse }" ref="Card">
     <div class="container">
       <div class="left img">
-        <div v-if="!imgUrl"></div>
+        <div v-if="!imgUrl" :class="imgBg"></div>
         <img v-else :src="imgUrl" alt="图片" />
       </div>
       <div class="right introduction" :style="introductionStyle">
@@ -62,7 +92,17 @@ onUnmounted(() => {
           {{ props.introduction }}
         </div>
         <router-link :to="props.url"> 了解更多<span>→</span> </router-link>
+        <div
+          class="decoration"
+          :class="decorationClass"
+          :style="decorationStyle"
+        ></div>
       </div>
+      <div
+        class="decoration"
+        :class="decorationClass"
+        :style="decorationStyle"
+      ></div>
     </div>
   </div>
 </template>
@@ -71,10 +111,12 @@ onUnmounted(() => {
 @marginBig: 3rem;
 .introductory-card {
   height: 100vh;
-  padding-top: 26px;
+  max-width: 100%;
+  overflow: hidden;
   padding-left: 0.5em;
   padding-right: 0.5em;
   display: flex;
+  overflow: hidden;
   .container {
     background-color: rgba(192, 192, 192, 0);
     position: relative;
@@ -91,7 +133,67 @@ onUnmounted(() => {
         width: 260px;
         height: 200px;
         border-radius: 5px;
-        //   box-shadow: 0 0 16px rgba(81, 81, 81, 0.7);
+        background-image: linear-gradient(30deg, #73a6ff 0%, #ff95e1 100%);
+
+        background: #7f7fd5; /* fallback for old browsers */
+      }
+
+      .img_bg_1 {
+        background: -webkit-linear-gradient(
+          90deg,
+          rgb(127, 127, 213),
+          rgb(134, 168, 231),
+          rgb(145, 213, 234)
+        );
+        background: linear-gradient(
+          90deg,
+          rgb(127, 127, 213),
+          rgb(134, 168, 231),
+          rgb(145, 213, 234)
+        );
+      }
+
+      .img_bg_2 {
+        background: #ffafbd; /* fallback for old browsers */
+        background: -webkit-linear-gradient(
+          to left,
+          rgb(255, 175, 189),
+          rgb(255, 195, 160)
+        );
+        background: linear-gradient(
+          to left,
+          rgb(255, 175, 189),
+          rgb(255, 195, 160)
+        );
+      }
+
+      .img_bg_3 {
+        background: #b993d6; /* fallback for old browsers */
+        background: -webkit-linear-gradient(
+          to left,
+          rgb(221, 181, 251),
+          rgb(165, 190, 240)
+        );
+        background: linear-gradient(
+          to left,
+          rgb(221, 181, 251),
+          rgb(165, 190, 240)
+        );
+      }
+      .img_bg_4 {
+        background: #0cebeb; /* fallback for old browsers */
+        background: -webkit-linear-gradient(
+          to left top,
+          rgb(12, 235, 235),
+          rgb(32, 227, 178),
+          rgb(41, 255, 198)
+        );
+        background: linear-gradient(
+          to left top,
+          rgb(12, 235, 235),
+          rgb(32, 227, 178),
+          rgb(41, 255, 198)
+        );
       }
 
       img {
@@ -113,6 +215,7 @@ onUnmounted(() => {
       -webkit-backdrop-filter: blur(6px);
       box-shadow: inset 0px 0px 6px rgba(217, 217, 217, 0.7);
       border-radius: 6px;
+      overflow: hidden;
 
       h5 {
         color: rgb(255, 86, 56);
@@ -148,6 +251,43 @@ onUnmounted(() => {
       }
     }
   }
+  .decoration {
+    position: absolute;
+    height: 80vh;
+    width: 60vw;
+    bottom: -40vh;
+    right: -50vw;
+    opacity: 0.3;
+    z-index: -9;
+  }
+  .decoration-triangle {
+    border-top: 50vh solid rgba(0, 0, 0, 0);
+    border-bottom: 30vh solid rgba(0, 0, 0, 0);
+    border-left: 80vw solid tomato;
+  }
+
+  .decoration-circle {
+    border-radius: 50%;
+    background-color: rgb(159, 62, 204);
+    transform: rotateZ(60deg);
+  }
+
+  .decoration-rectangle {
+    background-color: rgb(49, 210, 197);
+    height: 100vh;
+    width: 30vw;
+    right: -20vw;
+    transform: rotateZ(45deg);
+  }
+
+  .decoration-irregular {
+    border-top: 40vh solid;
+    border-bottom: 60vh solid;
+    border-left: 50vw solid;
+    border-color: rgb(21, 229, 156);
+    border-right: 20vw solid rgba(0, 0, 0, 0);
+    // transform: rotate3d(1, 1, 1, 45deg);
+  }
 }
 .reverse {
   background-color: rgba(192, 192, 192, 0.15);
@@ -160,6 +300,11 @@ onUnmounted(() => {
     .introduction {
       margin: @marginBig @marginBig 0 0;
     }
+  }
+
+  .decoration {
+    right: unset;
+    left: -50vw;
   }
 }
 
@@ -176,7 +321,6 @@ onUnmounted(() => {
     padding-right: 20%;
 
     .container {
-      min-height: 300px;
       .img {
         div,
         img {
@@ -199,7 +343,6 @@ onUnmounted(() => {
   @marginLeft: 10vw;
   .introductory-card {
     .container {
-      min-height: 40vh;
       .img {
         div,
         img {

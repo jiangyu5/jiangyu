@@ -34,8 +34,7 @@ function searchToUrl() {
     width: 50%;
     height: 2.6rem;
     font-size: 1rem;
-    font-weight: 600;
-    color: #fff;
+    color: inherit;
     border-color: white;
     border-radius: 1.5em;
     padding-left: 1.5em;

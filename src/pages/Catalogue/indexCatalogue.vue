@@ -67,14 +67,16 @@ function navActiveClass(index) {
       width: fit-content;
       line-height: 1em;
       box-sizing: border-box;
-      border-radius: 6px;
-      border-bottom-right-radius: 0;
-      border-top-right-radius: 6px;
       position: relative;
-      padding: 5px 7px;
+      padding: 5px 6px;
       margin: 0 0.8em;
-
-      @activeBgColor: #a9c9fffc;
+      background-color: #a9c9fffc;
+      background-image: linear-gradient(30deg, #73a6ff 0%, #ff95e1 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      border-bottom: 2px dashed #73a6ff;
+      transition: all .5s;
 
       &:first-child {
         margin-left: 2em;
@@ -85,14 +87,9 @@ function navActiveClass(index) {
       }
 
       &.active {
-        background-color: @activeBgColor;
-        background-image: linear-gradient(30deg, #a9c9fffc 0%, #ffbbec 100%);
+        color: #73a6ff;
         cursor: default;
-
-        span {
-          cursor: default;
-          border-bottom-color: @activeBgColor;
-        }
+        border-color: #ffbbec;
       }
 
       span {
@@ -102,7 +99,6 @@ function navActiveClass(index) {
         bottom: 0;
         color: rgb(85, 142, 223);
         font-size: 0.5em;
-        border-bottom: 2px solid rgba(0, 0, 0, 0);
 
         height: 2em;
         line-height: 2em;

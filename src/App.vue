@@ -19,6 +19,8 @@ import DirectoryNav from "./components/DirectoryNav.vue";
   min-height: 100vh;
   display: grid;
   grid-template-rows: auto auto 1fr auto;
+  color: var(--mid-6);
+  background-color: var(--mid-0);
 }
 
 .directory-nav {
@@ -36,13 +38,10 @@ main {
   padding: 0 1rem;
   font-size: 0.8rem;
   font-weight: 600;
-  color: rgb(104, 104, 104);
-  border-top: 1px solid rgb(210, 210, 210);
-  border-bottom: 1px solid rgb(210, 210, 210);
-  background-color: rgb(240, 240, 240);
+  color: var(--mid-4);
+  border-top: 1px solid var(--mid-3);
+  border-bottom: 1px solid var(--mid-3);
+  background-color: var(--mid-2);
 }
 
-/* @media screen and (min-width: 600px) {
-
-} */
 </style>

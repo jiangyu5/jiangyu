@@ -50,14 +50,13 @@ const linkList = [
   grid-template-areas:
     "nav nav nav"
     "list list basic";
-  color: rgb(128, 128, 128);
+  color: var(--mid-4);
   font-size: 0.5em;
   line-height: 2.5em;
   padding-top: 0.5rem;
   padding-bottom: 1rem;
   .footer-nav {
     grid-area: nav;
-    color: rgb(130, 137, 143);
 
     li {
       display: inline-block;
@@ -72,7 +71,7 @@ const linkList = [
       content: "";
       width: 100%;
       height: 1px;
-      background-color: rgb(210, 210, 210);
+      background-color: var(--mid-3);
       margin: 0.5rem 0;
     }
   }

@@ -1,6 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from "vue";
-
+import { ref, computed, onMounted, nextTick } from "vue";
 
 const props = defineProps({
   title: {
@@ -9,7 +8,7 @@ const props = defineProps({
   },
   description: {
     type: String,
-    default: "链接卡片的简单描述",
+    default: "简单描述 slot",
   },
   href: {
     type: String,
@@ -24,10 +23,10 @@ onMounted(() => {
 });
 
 const titleScroll = computed(() => {
-  if (titleWidth.value && titleWidth.value > 195) {
+  if (titleWidth.value && titleWidth.value > 179) {
     return {
       class: "title-scroll",
-      style: { "animation-duration": titleWidth.value * 0.04 + "s" },
+      style: { "animation-duration": titleWidth.value * 0.05 + "s" },
     };
   }
 
@@ -51,7 +50,9 @@ const titleScroll = computed(() => {
         {{ props.title }}
       </div>
     </div>
-    <div class="link-card-description">{{ props.description }}</div>
+    <div class="link-card-description">
+      <slot>{{ props.description }}</slot>
+    </div>
   </router-link>
 </template>
 
@@ -64,7 +65,7 @@ const titleScroll = computed(() => {
     transform: translateX(0);
   }
   100% {
-    transform: translateX(calc(-100% - 5em));
+    transform: translateX(calc(-99%));
   }
 }
 .link-card {
@@ -72,7 +73,7 @@ const titleScroll = computed(() => {
   display: block;
   width: 180px;
   color: inherit;
-  box-shadow: 2px 3px 6px rgba(84, 84, 84, 0.3);
+  box-shadow: 2px 3px 6px var(--mid-3);
   border-radius: 8px;
   position: relative;
   transition: 0.3s;
@@ -80,32 +81,32 @@ const titleScroll = computed(() => {
   overflow: hidden;
 
   &:hover {
-    // transform: scale(1.05);
-    box-shadow: -2px 2px 10px rgba(113, 178, 253, 0.401);
+    box-shadow: -2px 2px 10px var(--alpha-2);
 
     .link-card-decoration {
       top: -6em;
       right: -10em;
       transform: rotateZ(50deg);
-    //   animation: 5s infoRotate linear infinite;
     }
 
     .title-scroll {
       white-space: nowrap;
-      animation: titleScroll linear infinite;
+      animation-name: titleScroll;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
     }
   }
 
   .link-card-decoration {
     position: absolute;
     z-index: -9;
-    top: 2em;
-    right: -16em;
+    top: 1em;
+    right: -14em;
     width: 27em;
     height: 30em;
     border-radius: 50%;
-    background-color: #a9c9ff;
-    background-image: linear-gradient(30deg, #a9c9fffc 0%, #ffbbec 100%);
+    background-color: var(--main-1);
+    background-image: linear-gradient(30deg, var(--main-1) 0%, var(--main-4) 100%);
     transform: rotateZ(-90deg);
     transition: 0.4s;
 
@@ -121,7 +122,8 @@ const titleScroll = computed(() => {
 
   .link-card-title-container {
     overflow: hidden;
-    width: 195px;
+    max-width: 195px;
+    width: fit-content;
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -129,15 +131,15 @@ const titleScroll = computed(() => {
   }
 
   .link-card-description {
-    height: 3em;
     font-size: 0.8em;
+    line-height: 1.3em;
     text-indent: 2em;
     overflow: hidden;
     text-overflow: ellipsis;
     -ms-text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: auto;
   }
 }
 </style>

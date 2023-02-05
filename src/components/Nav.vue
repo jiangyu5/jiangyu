@@ -18,7 +18,7 @@ watch(
   () => route.path,
   (to) => {
     for (let i in routes) {
-      if (to == routes[i].path) {
+      if (to.includes(routes[i].path)) {
         navData.active_index = i;
         break;
       }
@@ -49,10 +49,22 @@ onMounted(() => {
     });
   }
 });
+
+// 主题切换
+const themeClass = ref("");
+function themeChange() {
+  themeClass.value = themeClass.value == "" ? "theme-dark" : "";
+  if (themeClass.value == "theme-dark") {
+    document.getElementById("app").className = "theme-dark"; // 拿到 #app
+  } else {
+    document.getElementById("app").className = ""; // 拿到 #app
+  }
+}
 </script>
 
 <template>
   <div class="nav">
+    <div class="theme" :class="themeClass" @click="themeChange"></div>
     <div class="active-bar" :style="navBarStyle"></div>
     <ul>
       <li v-for="(link, index) in routes" ref="Nav">
@@ -67,7 +79,26 @@ onMounted(() => {
 <style scoped lang="less">
 .nav {
   position: relative;
-  overflow: hidden;
+  width: fit-content;
+  margin-right: 0;
+  margin-left: auto;
+
+  .theme {
+    position: absolute;
+    left: -1.5em;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1.2em;
+    height: 1.2em;
+    border: 1px solid var(--mid-4);
+    border-right: 0.6em solid var(--mid-4);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.6s;
+  }
+  .theme-dark {
+    transform: translateY(-50%) rotateZ(180deg);
+  }
   .active-bar {
     position: absolute;
     bottom: 1px;
@@ -75,12 +106,13 @@ onMounted(() => {
     transition: left 0.3s, opacity 0.2s;
     width: 45.97px;
     height: 3px;
-    background-color: #a9c9ff94;
-    background-image: linear-gradient(135deg, #a9c9fffc 0%, #ffbbec 100%);
+    background-color: var(--main-1);
+    background-image: linear-gradient(135deg, var(--main-1) 0%, var(--main-4) 100%);
     border-radius: 1.5px;
   }
 
   ul {
+    display: inline-block;
     li {
       display: inline-block;
       margin: 0 3px;
@@ -97,7 +129,6 @@ onMounted(() => {
         // router-link 被选择时自动触发
         &.router-link-active {
           pointer-events: none;
-          background-color: none;
         }
       }
     }

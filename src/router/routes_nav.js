@@ -14,7 +14,7 @@ export default [
     name: "Notebook",
     component: () => import("../pages/Article/indexArticle.vue"),
     meta: {
-        title: '笔记本',
+        title: '笔记',
         nav: true
     },
     children: [

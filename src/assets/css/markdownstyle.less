@@ -60,7 +60,7 @@
   }
 
   & > *:first-child {
-    margin-top: 0;
+    margin-top: 1em;
   }
 
   & > *:last-child {
@@ -372,6 +372,35 @@
       border-top-left-radius: 6px;
       border-top-right-radius: 6px;
       background-color: var(--main-5);
+    }
+  }
+}
+
+.theme-dark .markdownstyle {
+  color: var(--mid-1);
+
+  a {
+    color: var(--main-4) !important;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    &::before,
+    &::after {
+      border-bottom-color: var(--main-5) !important;
+    }
+  }
+
+  blockquote {
+    border-left-color: var(--main-5);
+    &::before {
+      color: var(--main-4);
+    }
+    li {
+      color: var(--mid-3);
     }
   }
 }

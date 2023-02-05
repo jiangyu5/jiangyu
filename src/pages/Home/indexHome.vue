@@ -4,12 +4,6 @@ import IntroductoryCard from "./components/IntroductoryCard.vue";
 import HomeTop from "./components/HomeTop.vue";
 import { ref, watch, computed, onMounted, onUnmounted } from "vue";
 
-const clientHeight = ref(0);
-function resizeHeightListener() {
-  clientHeight.value =
-    window.innerHeight || document.documentElement.clientHeight;
-}
-
 const cards = [
   {
     title: "文档",
@@ -44,7 +38,7 @@ cards.forEach((e, index) => {
   } else {
     e["reverse"] = false;
   }
-//   e["imgUrl"] = defaultImg;
+  //   e["imgUrl"] = defaultImg;
   e["num"] = index;
 });
 
@@ -55,9 +49,10 @@ const viewProgress = {
   length: 0,
   scrollY: ref(0),
   _toviewIng: false,
+  listenerTimer: null,
   correctIndex() {
     let correction = Math.floor(window.scrollY / window.innerHeight);
-    if ( correction == this.index) return;
+    if (correction == this.index) return;
     this.index = correction;
   },
   correctIndexUp() {
@@ -83,9 +78,9 @@ const viewProgress = {
     if (this._toviewIng || !this.addIndex()) return;
     this.scrollTo();
     this._toviewIng = true;
-    setTimeout(() => {
+    this.listenerTimer = setTimeout(() => {
       this._toviewIng = false;
-      this.correctIndex()
+      this.correctIndex();
     }, 600);
   },
   toUpView() {
@@ -118,7 +113,15 @@ onMounted(() => {
     viewProgress.elements.push(e);
     viewProgress.length++;
   });
-  window.addEventListener("scroll", scrollListerner);
+
+  // pc 上加入切换动画
+  if (
+    !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    )
+  ) {
+    window.addEventListener("scroll", scrollListerner);
+  }
 });
 onUnmounted(() => {
   window.removeEventListener("scroll", scrollListerner);
@@ -129,10 +132,7 @@ onUnmounted(() => {
   <div class="home" ref="Home">
     <HomeTop />
     <div ref="CardsView">
-      <IntroductoryCard
-        v-for="card in cards"
-        v-bind="card"
-      />
+      <IntroductoryCard v-for="card in cards" v-bind="card" />
     </div>
   </div>
 </template>

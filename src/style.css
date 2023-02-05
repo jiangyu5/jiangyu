@@ -4,25 +4,44 @@
   line-height: 24px;
   font-weight: 400;
 
-  color: #242424;
-  background-color: rgba(255, 255, 255, 0.87);
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 
-  /* cursor: url(/src/assets/cursor/normal.cur), pointer; */
-}
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
 
-/* a,
-li {
-  cursor: url(/src/assets/cursor/normal.cur), pointer !important;
-} */
+  --mid-0: #ffffff;
+  --mid-1: #ffffff;
+  --mid-2: #f0f0f0;
+  --mid-3: #d9d9d9;
+  --mid-4: #8c8c8c;
+  --mid-5: #595959;
+  --mid-6: #000000;
 
-::-webkit-progress-bar {
-  width: 7px;
+  --main-1: #a9c9ff;
+  --main-2: #abaef1;
+  --main-3: #888de7;
+  --main-4: #ffbbec;
+  --main-5: #f0bbff;
+  --main-6: #e62cff;
+  --main-7: #bbffd6;
+  --main-8: #64ffa2;
+  --main-9: #1cfd76;
+  --main-10: #ffd4b3;
+  --main-11: #ff9050;
+  --main-12: #ff6607;
+
+  --alpha-1: rgba(162, 173, 247, 0.2);
+  --alpha-2: rgba(113, 178, 253, 0.3);
+  --alpha-3: #d9d9d920;
+  --alpha-4: rgba(84, 84, 84, 0.3);
+  --alpha-5: #fcfcfc52;
+
+
 }
 
 body,
@@ -50,24 +69,16 @@ ul {
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: var(--main-1);
   text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
 a:hover {
-  color: #535bf2;
+  color: var(--main-2);
 }
 
 input {
-  border: 1px solid #333;
+  border: 1px solid var(--mid-5);
   border-radius: 6px;
   outline: none;
   padding-left: 8px;
@@ -77,19 +88,29 @@ input {
 }
 
 button {
+  color: var(--mid-1);
+  background-color: var(--mid-5);
   border-radius: 8px;
-  border: 1px solid #333;
+  border: 1px solid var(--mid-5);
   padding: 0.6em 1.2em;
   font-weight: 500;
-  background-color: #333;
-  color: #eee;
   cursor: pointer;
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: var(--main-1);
 }
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+#app.theme-dark {
+    --mid-6: #ffffff;
+    --mid-5: #f0f0f0;
+    --mid-4: #d9d9d9;
+    --mid-3: #8c8c8c;
+    --mid-2: #595959;
+    --mid-1: #000000;
+    --mid-0: #3f3f3f;
 }

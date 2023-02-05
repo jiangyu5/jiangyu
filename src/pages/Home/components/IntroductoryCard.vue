@@ -50,7 +50,6 @@ const decorationClass = computed(() => {
 // 未传入图片时的背景
 const imgBg = computed(() => {
   const decoration = ["img_bg_1", "img_bg_2", "img_bg_3", "img_bg_4"]; // 保持偶数项，否则，因为图形不对称，reserver 难看，待修改
-
   let length = decoration.length;
   if (props.num < length) return decoration[props.num];
   return decoration[props.num % length];
@@ -81,6 +80,11 @@ onUnmounted(() => {
 <template>
   <div class="introductory-card" :class="{ reverse: reverse }" ref="Card">
     <div class="container">
+      <div
+        class="decoration"
+        :class="decorationClass"
+        :style="decorationStyle"
+      ></div>
       <div class="left img">
         <div v-if="!imgUrl" :class="imgBg"></div>
         <img v-else :src="imgUrl" alt="图片" />
@@ -98,18 +102,15 @@ onUnmounted(() => {
           :style="decorationStyle"
         ></div>
       </div>
-      <div
-        class="decoration"
-        :class="decorationClass"
-        :style="decorationStyle"
-      ></div>
     </div>
   </div>
 </template>
 
 <style scoped lang="less">
+
 @marginBig: 3rem;
 .introductory-card {
+  background-color: var(--alpha-3);
   height: 100vh;
   max-width: 100%;
   overflow: hidden;
@@ -118,14 +119,13 @@ onUnmounted(() => {
   display: flex;
   overflow: hidden;
   .container {
-    background-color: rgba(192, 192, 192, 0);
+    // background-color: rgba(0, 0, 0, 0);
     position: relative;
     margin: auto;
     .img {
       position: absolute;
       top: 0;
       left: 0;
-      z-index: -1;
       min-height: 200px;
 
       div,
@@ -133,9 +133,12 @@ onUnmounted(() => {
         width: 260px;
         height: 200px;
         border-radius: 5px;
-        background-image: linear-gradient(30deg, #73a6ff 0%, #ff95e1 100%);
-
-        background: #7f7fd5; /* fallback for old browsers */
+        background: var(--main-1);
+        background-image: linear-gradient(
+          30deg,
+          var(--main-1) 0%,
+          var(--main-4) 100%
+        );
       }
 
       .img_bg_1 {
@@ -213,12 +216,12 @@ onUnmounted(() => {
       background: rgba(255, 255, 255, 0.5);
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
-      box-shadow: inset 0px 0px 6px rgba(217, 217, 217, 0.7);
+      box-shadow: inset 0px 0px 6px var(--alpha-4);
       border-radius: 6px;
       overflow: hidden;
 
       h5 {
-        color: rgb(255, 86, 56);
+        color: var(--main-12);
       }
 
       h5,
@@ -237,7 +240,7 @@ onUnmounted(() => {
         font-size: 0.8em;
         font-weight: 600;
         color: #fff;
-        background-color: rgba(51, 51, 51, 0.9);
+        background-color: #000;
         border-radius: 5px;
         padding: 0.3em 0.6em;
         margin-top: 1.5em;
@@ -257,8 +260,7 @@ onUnmounted(() => {
     width: 60vw;
     bottom: -40vh;
     right: -50vw;
-    opacity: 0.3;
-    z-index: -9;
+    opacity: 0.5;
   }
   .decoration-triangle {
     border-top: 50vh solid rgba(0, 0, 0, 0);
@@ -290,7 +292,7 @@ onUnmounted(() => {
   }
 }
 .reverse {
-  background-color: rgba(192, 192, 192, 0.15);
+  background-color: #ffffff00;
   .container {
     .img {
       left: auto;
@@ -305,6 +307,72 @@ onUnmounted(() => {
   .decoration {
     right: unset;
     left: -50vw;
+  }
+}
+
+.theme-dark .introductory-card .container {
+  .img {
+    .img_bg_1 {
+      background: -webkit-linear-gradient(
+        90deg,
+        rgb(127, 127, 213),
+        rgb(134, 168, 231),
+        rgb(145, 213, 234)
+      );
+      background: linear-gradient(
+        90deg,
+        rgb(142, 142, 182),
+        rgb(157, 170, 193),
+        rgb(92, 195, 168)
+      );
+    }
+
+    .img_bg_2 {
+      background: #ffafbd; /* fallback for old browsers */
+      background: -webkit-linear-gradient(
+        to left,
+        rgb(255, 175, 189),
+        rgb(255, 195, 160)
+      );
+      background: linear-gradient(
+        to left,
+        rgb(210, 150, 161),
+        rgb(221, 170, 141)
+      );
+    }
+
+    .img_bg_3 {
+      background: #b993d6; /* fallback for old browsers */
+      background: -webkit-linear-gradient(
+        to left,
+        rgb(221, 181, 251),
+        rgb(165, 190, 240)
+      );
+      background: linear-gradient(
+        to left,
+        rgb(182, 150, 207),
+        rgb(140, 152, 176)
+      );
+    }
+    .img_bg_4 {
+      background: #0cebeb; /* fallback for old browsers */
+      background: -webkit-linear-gradient(
+        to left,
+        rgb(93, 190, 190),
+        rgb(108, 205, 181),
+        rgb(116, 230, 200)
+      );
+      background: linear-gradient(
+        to left,
+        rgb(93, 190, 190),
+        rgb(108, 205, 181),
+        rgb(116, 230, 200)
+      );
+    }
+  }
+
+  .introduction {
+    background: rgba(0, 0, 0, 0.1);
   }
 }
 

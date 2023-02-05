@@ -1,9 +1,8 @@
+
 from pathlib import Path
-import shutil
 import time
 import json
 import os
-
 
 relative_path = 'public'
 notebook = Path('public/notebook')
@@ -14,6 +13,23 @@ save_json_name = 'index.json'
 def str_time(times):
     '''时间戳转为时间'''
     return time.strftime("%Y/%m/%d %H:%M:%S", time.localtime(times))
+
+
+def get_md(data):
+    md = f'# {data["name"]} 文档\n'
+    files = data['files']
+    for n in files:
+        md += f'<h3><a style="color: tomato; border-bottom: 2px dashed tomato;" href="{n["path"].replace(" ", "-")}">{n["name"]}</a></h3>\n\n'
+        md += f'> - 状态更改：{n["ctime"]}\n'
+        md += f'> - 最近修改：{n["mtime"]}\n'
+        md += f'> - 最近访问：{n["atime"]}\n\n'
+        if n['type'] == 'dir':
+            md += f'\n&emsp;&emsp;&emsp;&emsp;推荐阅读：\n\n'
+            for i in n['files']:
+                md += f'&emsp;&emsp;&emsp;&emsp;{i["mtime"][2:-3]}&ensp;[{i["name"]}](#{i["path"].replace(" ", "-")})\n\n'
+
+        md += '<br />'
+    return md
 
 
 def get_info(path):
@@ -40,11 +56,21 @@ def get_info(path):
         data['count'] += 1
         data['files'].append(get_info(p))
 
+    # 文件排序，data['files']，暂时仅对 notebook 逆序
+    if path == notebook:
+        data['files'].sort(key=lambda x: x['name'], reverse=True)
+
+    # 保存 json 类型数据
     save_path = (relative_path + '/data/') / \
         path.relative_to(relative_path) / save_json_name
     save_path.parent.mkdir(parents=True, exist_ok=True)
     save_path.write_text(json.dumps(
         data, ensure_ascii=False), encoding='utf-8')
+
+    # index.md 默认生成
+    index_md = path / 'index.md'
+    index_md.touch()
+    index_md.write_text(get_md(data), encoding='utf-8')
 
     return data
 

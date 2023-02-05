@@ -2,11 +2,11 @@
 
 <template>
   <div class="about">
-    <div class="sentence sentence-0">像这样空着......</div>
-    <div class="sentence sentence-1">
-      我也<span class="jiangbu">不</span><span class="jiangku">想</span>
+    <div class="sentence sentence-0 font_bg">像这样空着......</div>
+    <div class="sentence sentence-1 font_bg">
+      我也<span class="jiangbu font_bg">不</span><span class="jiangku font_bg">想</span>
     </div>
-    <div class="sentence-2">
+    <div class="sentence-2 font_bg">
       <p>完善中</p>
       <p>这一页会不一样</p>
     </div>
@@ -20,7 +20,6 @@
   flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
-  gap: 3em;
 
   .sentence-0 {
     margin-right: 30%;
@@ -30,31 +29,23 @@
     font-size: 2rem;
     color: #fff;
     text-shadow: 3px 3px 3px rgb(136, 136, 136);
+
   }
 
   .sentence-2 {
     align-self: end;
     text-align: right;
     margin-right: 10%;
-    color: #fff;
     line-height: 2em;
+    color: #fff;
     padding: 0;
     text-shadow: 1px 1px 2px rgb(76, 76, 76);
-  }
-
-  .small {
-    display: inline-block;
-    transform: scale(0.8);
-  }
-  .rotate-200 {
-    display: inline-block;
-    transform: rotateZ(200deg);
   }
 
   .jiangbu {
     display: inline-block;
     color: #fff;
-    animation: jiangbu 3s 3s linear forwards;
+    animation: jiangbu 3s 2s linear forwards;
   }
 
   @keyframes jiangbu {
@@ -66,18 +57,15 @@
     }
 
     50% {
-      color: black;
       transform: rotateZ(200deg) scale(0.6) translateY(-0.5em);
     }
 
     80% {
-      color: black;
       transform: rotateZ(180deg) scale(0.6) translateY(-0.5em);
       opacity: 1;
     }
 
     100% {
-      color: black;
       transform: rotateZ(180deg) scale(0.6) translateY(-10em);
       opacity: 0;
     }
@@ -111,12 +99,13 @@
     }
   }
 
-  .black {
-    color: black;
-  }
-
-  .tomato {
-    color: tomato;
+  .font_bg {
+    background-image: linear-gradient(30deg, #73a6ff 0%, #ff95e1 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    text-shadow: unset;
+    line-height: 1.5em;
   }
 }
 </style>

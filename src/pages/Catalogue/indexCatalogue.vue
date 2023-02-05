@@ -2,10 +2,15 @@
 import { reactive, computed } from "vue";
 import ajax from "../../hook/ajax";
 import LinkCard from "../../components/LinkCard.vue";
+import { ref } from "vue";
 
 const data = reactive({
   files: [],
   navActive: 0,
+  ctime: "",
+  mtime: "",
+  atime: "",
+  description: "",
 });
 
 const showFiles = computed(() => {
@@ -18,8 +23,16 @@ ajax("data/notebook/index.json").then((res) => {
   data.count = jsonParse["count"];
 });
 
+const Catalogue = ref(null);
 function navActiveChange(index) {
   data.navActive = index;
+
+  if (document.documentElement.scrollTop > 20) {
+    Catalogue.value.scrollIntoView({
+      block: "start",
+      behavior: "smooth",
+    });
+  }
 }
 
 function navActiveClass(index) {
@@ -28,7 +41,7 @@ function navActiveClass(index) {
 </script>
 
 <template>
-  <div class="catalogue">
+  <div class="catalogue" ref="Catalogue">
     <ul class="catalogue-nav">
       <li
         v-for="(catalogue, index) in data.files"
@@ -40,11 +53,12 @@ function navActiveClass(index) {
     </ul>
     <ul class="article-list">
       <template v-if="showFiles">
-        <li v-for="article in showFiles">
-          <link-card
-            :title="article['name']"
-            :href="article['path']"
-          ></link-card>
+        <li v-for="article in showFiles" :key="article['name']">
+          <link-card :title="article['name']" :href="article['path']">
+            <ul class="link-info" style="text-align: right">
+              <li>{{ article["mtime"].slice(2) }}</li>
+            </ul>
+          </link-card>
         </li>
       </template>
     </ul>
@@ -54,13 +68,14 @@ function navActiveClass(index) {
 <style scoped lang="less">
 .catalogue {
   text-align: left;
+  padding-top: 0.5em;
+  height: 100%;
   .catalogue-nav {
     position: sticky;
     top: 26px;
     z-index: 9;
-    background-color: white;
-    padding-top: 1em;
-    padding-bottom: 2px;
+    background-color: var(--mid-0);
+    padding-top: 0.5em;
 
     li {
       display: inline-block;
@@ -75,8 +90,8 @@ function navActiveClass(index) {
       background-clip: text;
       -webkit-background-clip: text;
       color: transparent;
-      border-bottom: 2px dashed #73a6ff;
-      transition: all .5s;
+      border-bottom: 2px dashed rgba(0, 0, 0, 0);
+      transition: all 0.2s;
 
       &:first-child {
         margin-left: 2em;
@@ -87,9 +102,9 @@ function navActiveClass(index) {
       }
 
       &.active {
-        color: #73a6ff;
+        color: var(--main-3);
+        border-color: var(--main-3);
         cursor: default;
-        border-color: #ffbbec;
       }
 
       span {
@@ -97,7 +112,7 @@ function navActiveClass(index) {
         position: absolute;
         left: 100%;
         bottom: 0;
-        color: rgb(85, 142, 223);
+        color: var(--main-3);
         font-size: 0.5em;
 
         height: 2em;

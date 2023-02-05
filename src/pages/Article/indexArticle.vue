@@ -152,6 +152,9 @@ onUnmounted(() => {
 
 <style scoped lang="less">
 .article {
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
   min-height: 100vh;
   width: calc(100vw - 17px);
   padding: 0 1em;
@@ -159,16 +162,14 @@ onUnmounted(() => {
 
   .articles-aside,
   .article-titles-aside {
+    display: none;
     width: 100%;
     padding-top: 16px;
-  }
-  .article-titles-aside {
-    display: none;
   }
 
   .article-main {
     padding-top: 16px;
-    padding-bottom: 3em;
+    padding-bottom: 6em;
     .article-main-header {
       padding: 8px 16px;
       margin-bottom: 32px;
@@ -190,12 +191,17 @@ onUnmounted(() => {
     flex-wrap: nowrap;
     justify-items: center;
 
+    .articles-aside {
+      width: 180px;
+      display: block;
+    }
+
     .articles-aside,
     .article-titles-aside {
       position: sticky;
       top: 26px;
       max-height: calc(100vh - 26px);
-      width: 150px;
+      width: 190px;
       overflow: auto;
       flex: 1 auto 0;
       padding-bottom: 20%;
@@ -230,6 +236,7 @@ onUnmounted(() => {
     .article-main {
       padding-left: 2.5em;
       padding-right: 2.5em;
+      padding-bottom: 20vh;
     }
   }
 }

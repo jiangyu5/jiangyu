@@ -15,21 +15,21 @@ import Nav from "./Nav.vue";
   padding: 6px 6px 3px 1em;
   h1 {
     font-size: 1.8em;
-    line-height: 1.2em;
-    background-color: #3333;
-    background: url("../assets/bg_header.jpg") no-repeat center;
-    background-clip: text;
-    -webkit-background-clip: text;
-    background-size: cover;
-    color: rgba(139, 153, 230, 0);
-    text-shadow: 0 3px 10px rgba(162, 173, 247, 0.2);
+    line-height: 1.4em;
+    // background-color: var(--main-1);
+    // background: url("../assets/bg_header.jpg") no-repeat center;
+    // background-clip: text;
+    // -webkit-background-clip: text;
+    // background-size: cover;
+    // color: rgba(0, 0, 0, 0);
+    color: var(--mid-6);
   }
   .nav {
     text-align: right;
   }
 }
 
-@media screen and (min-width: 500px) {
+@media screen and (min-width: 550px) {
   .header {
     display: grid;
     grid-template-columns: 1fr auto;

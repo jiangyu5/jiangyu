@@ -56,8 +56,10 @@ function themeChange() {
   themeClass.value = themeClass.value == "" ? "theme-dark" : "";
   if (themeClass.value == "theme-dark") {
     document.getElementById("app").className = "theme-dark"; // 拿到 #app
+    // document.documentElement.style.backgroundColor = "#3f3f3f";
   } else {
     document.getElementById("app").className = ""; // 拿到 #app
+    // document.documentElement.style.backgroundColor = "#fff";
   }
 }
 </script>
@@ -85,13 +87,13 @@ function themeChange() {
 
   .theme {
     position: absolute;
-    left: -1.5em;
+    left: -2em;
     top: 50%;
     transform: translateY(-50%);
     width: 1.2em;
     height: 1.2em;
-    border: 1px solid var(--mid-4);
-    border-right: 0.6em solid var(--mid-4);
+    border: 1px solid var(--mid-5);
+    border-right: 0.6em solid var(--mid-5);
     border-radius: 50%;
     cursor: pointer;
     transition: all 0.6s;
@@ -107,7 +109,11 @@ function themeChange() {
     width: 45.97px;
     height: 3px;
     background-color: var(--main-1);
-    background-image: linear-gradient(135deg, var(--main-1) 0%, var(--main-4) 100%);
+    background-image: linear-gradient(
+      135deg,
+      var(--main-1) 0%,
+      var(--main-4) 100%
+    );
     border-radius: 1.5px;
   }
 

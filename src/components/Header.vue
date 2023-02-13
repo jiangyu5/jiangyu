@@ -16,12 +16,6 @@ import Nav from "./Nav.vue";
   h1 {
     font-size: 1.8em;
     line-height: 1.4em;
-    // background-color: var(--main-1);
-    // background: url("../assets/bg_header.jpg") no-repeat center;
-    // background-clip: text;
-    // -webkit-background-clip: text;
-    // background-size: cover;
-    // color: rgba(0, 0, 0, 0);
     color: var(--mid-6);
   }
   .nav {

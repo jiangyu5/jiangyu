@@ -87,10 +87,7 @@ onUnmounted(() => {
 <style scoped lang="less">
 .theme-dark .home-top {
   &::before {
-    // background: -webkit-linear-gradient(to right, #a9c9ff, #ffbbec);
-    // background: linear-gradient(to right, #a9c9ff2c, #ffbbec45);
-
-    background: #757f9a; /* fallback for old browsers */
+    background: #757f9a;
     background: -webkit-linear-gradient(
       to right,
       rgb(117, 127, 154),
@@ -121,7 +118,6 @@ onUnmounted(() => {
     height: 1200px;
     border-radius: 50%;
     animation: ani 8s linear infinite;
-    // background: var(--main-1);
     background: -webkit-linear-gradient(to right, var(--main-1), var(--main-8));
     background: linear-gradient(to right, var(--main-1), var(--main-8));
   }
@@ -137,10 +133,11 @@ onUnmounted(() => {
 
   .wrapper {
     position: absolute;
-    top: 70px;
+    top: 0;
     left: 0;
     width: 100%;
     z-index: 1;
+    padding: 70px 1em 1em;
   }
   .personal-signature {
     font-size: 0.8em;

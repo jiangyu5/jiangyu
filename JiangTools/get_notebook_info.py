@@ -19,7 +19,7 @@ def get_md(data):
     md = f'# {data["name"]} 文档\n'
     files = data['files']
     for n in files:
-        md += f'<h3><a style="color: tomato; border-bottom: 2px dashed tomato;" href="{n["path"].replace(" ", "-")}">{n["name"]}</a></h3>\n\n'
+        md += f'<h3><a style="color: tomato; border-bottom: 2px dashed tomato;" href="#{n["path"].replace(" ", "-")}">{n["name"]}</a></h3>\n\n'
         md += f'> - 状态更改：{n["ctime"]}\n'
         md += f'> - 最近修改：{n["mtime"]}\n'
         md += f'> - 最近访问：{n["atime"]}\n\n'

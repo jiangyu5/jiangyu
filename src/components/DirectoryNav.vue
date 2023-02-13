@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from "vue";
 import { useRoute } from "vue-router";
+import useWinScroll from "../hook/useWinScrollYX";
 
 const route = useRoute();
 const paths = computed(() => {
@@ -14,6 +15,17 @@ const paths = computed(() => {
     };
   });
 });
+
+const { scrollY } = useWinScroll();
+const toTopisShow = computed(() => {
+  return scrollY.value ? true : false;
+});
+function toTop() {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+}
 </script>
 
 <template>
@@ -23,10 +35,26 @@ const paths = computed(() => {
       <span>/</span>
       <router-link :to="link.url" replace>{{ link.link }}</router-link>
     </template>
+    <Transition name="to-top">
+      <div class="to-top" v-show="toTopisShow" @click="toTop">Top</div>
+    </Transition>
   </div>
 </template>
 
 <style scoped>
+.to-top-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.to-top-leave-active {
+  transition: all 0.3s ease-in;
+}
+
+.to-top-enter-from,
+.to-top-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
+}
 a {
   color: inherit;
   font-weight: 600;
@@ -35,5 +63,10 @@ a {
 span {
   font-weight: 600;
   margin: 0 6px;
+}
+
+.to-top {
+  float: right;
+  cursor: pointer;
 }
 </style>

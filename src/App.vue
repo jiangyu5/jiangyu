@@ -30,7 +30,7 @@ import DirectoryNav from "./components/DirectoryNav.vue";
 }
 
 main {
-  min-height: calc(100vh - 69.52px);
+  min-height: calc(100vh - 238.31px);
 }
 
 .directory-nav,
@@ -43,5 +43,4 @@ main {
   border-bottom: 1px solid var(--mid-3);
   background-color: var(--mid-2);
 }
-
 </style>

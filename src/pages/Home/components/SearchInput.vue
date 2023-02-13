@@ -40,7 +40,7 @@ onMounted(() => {
 
 .search-input {
   position: relative;
-  width: 90%;
+  width: 80%;
   max-width: 420px;
   margin: 0 auto;
 
@@ -54,7 +54,6 @@ onMounted(() => {
     padding-left: 1.5em;
     padding-right: 3em;
     transition: all 0.2s;
-
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
@@ -65,11 +64,11 @@ onMounted(() => {
   }
 
   .search-btn {
-    width: calc(2.6rem - 2px);
-    height: calc(2.6rem - 2px);
+    width: calc(2.6rem - 4px);
+    height: calc(2.6rem - 4px);
     position: absolute;
-    right: 1px;
-    top: 1px;
+    right: 2px;
+    top: 2px;
     background-color: var(--alpha-5);
     cursor: pointer;
     border-radius: 50%;
@@ -114,12 +113,12 @@ onMounted(() => {
   .search-input {
     input {
       font-size: 1.2rem;
-      height: 3.2rem;
+      height: 3.3rem;
     }
 
     .search-btn {
-      width: calc(3.2rem - 2px);
-      height: calc(3.2rem - 2px);
+      width: calc(3.3rem - 4px);
+      height: calc(3.3rem - 4px);
     }
   }
 }

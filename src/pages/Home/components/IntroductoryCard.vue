@@ -59,9 +59,10 @@ const imgBg = computed(() => {
 const cardTop = ref(0); // scroll 卷起部分
 watch(cardTop, (top) => {
   let height = window.innerHeight;
-  if (top >= height / 2 || top <= -height) return;
-  let translateXValue = (top * 25) / height;
-  if (props.reverse) translateXValue *= -1;
+  if (top > height || top <= -height/2) return;
+  let translateXValue = props.reverse
+    ? -(top * 30) / height
+    : (top * 30) / height;
   introductionStyle.transform = `translateX(${translateXValue}%)`;
 });
 
@@ -107,7 +108,6 @@ onUnmounted(() => {
 </template>
 
 <style scoped lang="less">
-
 @marginBig: 3rem;
 .introductory-card {
   background-color: var(--alpha-3);

@@ -2,61 +2,51 @@
 import ArticleTitlesAside from "./components/ArticleTitlesAside.vue";
 import ArticlesAside from "./components/ArticlesAside.vue";
 
-import ajax from "../../hook/ajax";
+import useAjax from "../../hook/useAjax";
 import { marked } from "marked";
 import "../../assets/css/markdownstyle.less";
 
-import {
-  ref,
-  reactive,
-  watch,
-  onMounted,
-  onUnmounted,
-  computed,
-  nextTick,
-} from "vue";
+import { ref, watch, onMounted, onUnmounted, computed, nextTick } from "vue";
 import { useRoute } from "vue-router";
+import IsLoading from "../../components/isLoading.vue";
 
 const route = useRoute();
-const dirInfo = reactive({}); // 文件夹数据,该数据还未用到
-const aside = computed(() => {
-  return dirInfo["files"];
+const articleUrl = ref("");
+const articleTitle = ref("");
+const articleData = useAjax(articleUrl)["data"];
+const articleContent = computed(() => {
+  if (articleData.value) return marked(articleData.value);
+  return "";
 });
 
-const articleData = reactive({
-  title: "",
-  content: "",
+const asideUrl = computed(() => {
+  let tempPath = articleUrl.value.split("/").slice(0, -1).join("/");
+  if (tempPath == "/notebook" || tempPath == "")
+    return "/data/notebook/index.json";
+  return "/data" + tempPath + "/index.json";
 });
-// 更新 articleData 和 dirInfo 数据
+const asideData = useAjax(asideUrl)["data"];
+const aside = computed(() => {
+  if (asideData.value) {
+    return asideData.value["files"];
+  }
+  return null;
+});
+
 watch(
   () => route.path,
-  (to, from) => {
+  (to) => {
     if (!to.startsWith("/notebook")) return;
-    let articleUrl = "";
     if (to.includes(".md")) {
-      articleUrl = to;
-      articleData.title = decodeURIComponent(
+      articleUrl.value = to;
+      articleTitle.value = decodeURIComponent(
         to.slice(to.lastIndexOf("/") + 1, -3)
       );
     } else {
-      articleData.title = decodeURIComponent(to.slice(to.lastIndexOf("/") + 1));
-      articleUrl = to + "/index.md";
-    }
-
-    ajax(articleUrl)
-      .then((res) => {
-        articleData.content = marked(res);
-      })
-      .then(() => {
-        progress.init();
-      });
-
-    let fromParent = from ? from.split("/").slice(0, -1) : from;
-    let toParent = articleUrl.split("/").slice(0, -1);
-    if (fromParent != toParent) {
-      ajax("/data/" + toParent.join("/") + "/index.json").then((res) => {
-        Object.assign(dirInfo, JSON.parse(res));
-      });
+      articleTitle.value = decodeURIComponent(
+        to.slice(to.lastIndexOf("/") + 1)
+      );
+      articleUrl.value = to + "/index.md";
     }
   },
   { immediate: true }
@@ -64,8 +54,8 @@ watch(
 
 // 文档所有标题
 const titles = computed(() => {
-  let matchTitles = articleData.content.match(/<h\d id=(.*)<\/h\d>/g);
-  if (!matchTitles) return [];
+  let matchTitles = articleContent.value.match(/<h\d id=(.*)<\/h\d>/g);
+  if (!matchTitles) return;
   return matchTitles.map((e) => {
     let temp = e.match(/(h\d) id="(.*?)"/);
     return {
@@ -77,41 +67,52 @@ const titles = computed(() => {
 
 // 阅读进度与锚点
 // 需要完善视口的判定
-const ArticleMain = ref();
+const ArticleMain = ref(null);
+const titleIndex = ref(0);
 const progress = {
   doms: [],
-  index: ref(0),
+  index: 0,
   length: 0,
   viewHeight: window.innerHeight / 2,
   init() {
     // 路由变化时,接收完数据后触发
     this.doms = ArticleMain.value.querySelectorAll("h1, h2, h3, h4, h5, h6");
-    this.index.value = 0;
     this.length = this.doms.length;
+    this.index = 0;
+    titleIndex.value = 0;
   },
   changeIndex(index) {
-    this.index.value = index;
-    this.doms[this.index.value].scrollIntoView(true);
+    this.index = index;
+    this.doms[this.index].scrollIntoView(true);
   },
   titleTop() {
-    return this.doms[this.index.value].getBoundingClientRect().top;
+    return this.doms[this.index].getBoundingClientRect().top;
   },
   titleBottom() {
-    return this.doms[this.index.value].getBoundingClientRect().bottom;
+    return this.doms[this.index].getBoundingClientRect().bottom;
   },
   viewUp() {
-    if (this.index.value >= this.length - 1) return;
-    if (this.titleBottom() < this.viewHeight) this.index.value++;
+    if (this.index >= this.length - 1) return;
+    if (this.titleBottom() < this.viewHeight) this.index++;
   },
   viewDown() {
-    if (this.index.value <= 0) return;
-    if (this.titleTop() > this.viewHeight) this.index.value--;
+    if (this.index <= 0) return;
+    if (this.titleTop() > this.viewHeight) this.index--;
   },
   listener() {
     this.viewUp();
     this.viewDown();
+    if (titleIndex.value != this.index) {
+      titleIndex.value = this.index;
+    }
   },
 };
+
+watch(articleContent, () => {
+  nextTick(() => {
+    progress.init(); // 初始化阅读进度
+  });
+});
 
 function changeTitleIndex(index) {
   progress.changeIndex(index);
@@ -128,23 +129,31 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener("scroll", progressListener);
 });
+
+// is-loading 是否出现
+const isLoading = ref(true);
+watch([articleUrl, articleContent], (v, o) => {
+  isLoading.value = v[0] == o[0] ? false : true;
+});
 </script>
 
 <template>
   <div class="article">
     <ArticlesAside :data="aside"></ArticlesAside>
     <div class="article-main">
-      <div class="article-main-header">{{ articleData.title }}</div>
+      <div class="article-main-header">{{ articleTitle }}</div>
+      <IsLoading v-show="isLoading" />
       <div
+        v-show="!isLoading"
         class="markdownstyle"
-        v-html="articleData.content"
+        v-html="articleContent"
         ref="ArticleMain"
       ></div>
     </div>
 
     <ArticleTitlesAside
       :titles="titles"
-      :active-title-index="progress.index.value"
+      :activeTitleIndex="titleIndex"
       @change-title-index="changeTitleIndex"
     ></ArticleTitlesAside>
   </div>
@@ -170,16 +179,23 @@ onUnmounted(() => {
   .article-main {
     padding-top: 16px;
     padding-bottom: 6em;
+    position: relative;
+
+    .is-loading {
+      height: calc(80vh - 11em);
+    }
     .article-main-header {
-      padding: 8px 16px;
+      padding: 1em 16px 8px;
       margin-bottom: 32px;
-      font-size: 2.3em;
+      font-size: 1.5em;
       line-height: 1.5em;
       color: white;
       font-weight: 600;
       align-self: end;
-      background: url(../../assets/bg_header.jpg) center;
-      background-size: cover;
+      background-color: #a9c9fffc;
+      background-image: linear-gradient(90deg, #73a6ff 0%, #ff95e1 100%);
+      border-radius: 0.2em;
+      opacity: 0.7;
     }
   }
 }
@@ -212,12 +228,6 @@ onUnmounted(() => {
       padding-right: 2em;
       width: 500px;
       flex: 1 1;
-
-      .article-main-header {
-        @height: 3em;
-        padding: @height 16px 8px;
-        margin-bottom: 32px;
-      }
     }
   }
 }

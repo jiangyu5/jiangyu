@@ -30,7 +30,7 @@ import DirectoryNav from "./components/DirectoryNav.vue";
 }
 
 main {
-  min-height: calc(100vh - 238.31px);
+  min-height: calc(100vh - 220px);
 }
 
 .directory-nav,

@@ -26,15 +26,23 @@ watch(
   }
 );
 
-// 从 router 中获得 nav 数
+// 暂时从 router 中获得 nav 数
 // 作为 nav 的路由 meta.nav = true
 const routes = router.getRoutes().reduce((previousRoute, currentRoute) => {
   if (currentRoute.meta.nav) {
-    previousRoute.push({
-      path: currentRoute.path,
-      name: currentRoute.name,
-      title: currentRoute.meta.title,
-    });
+    if (currentRoute.meta.nav_index) {
+      previousRoute.splice(currentRoute.meta.nav_index-1, 0, {
+        path: "/" + currentRoute.path.split("/")[1],
+        name: currentRoute.name,
+        title: currentRoute.meta.title,
+      });
+    } else {
+      previousRoute.push({
+        path: "/" + currentRoute.path.split("/")[1],
+        name: currentRoute.name,
+        title: currentRoute.meta.title,
+      });
+    }
   }
   return previousRoute;
 }, []);

@@ -7,7 +7,6 @@ const route = useRoute();
 const paths = computed(() => {
   let fullPath = decodeURIComponent(route.fullPath);
   let fullPaths = fullPath.slice(1).replace(".md", "").split("/");
-
   return fullPaths.map((e, index) => {
     return {
       link: e,

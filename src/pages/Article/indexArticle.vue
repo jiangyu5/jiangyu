@@ -1,140 +1,42 @@
 <script setup>
 import ArticleTitlesAside from "./components/ArticleTitlesAside.vue";
 import ArticlesAside from "./components/ArticlesAside.vue";
-
-import useAjax from "../../hook/useAjax";
-import { marked } from "marked";
-import "../../assets/css/markdownstyle.less";
-
-import { ref, watch, onMounted, onUnmounted, computed, nextTick } from "vue";
-import { useRoute } from "vue-router";
 import IsLoading from "../../components/isLoading.vue";
 
-const route = useRoute();
-const articleUrl = ref("");
-const articleTitle = ref("");
-const articleData = useAjax(articleUrl)["data"];
-const articleContent = computed(() => {
-  if (articleData.value) return marked(articleData.value);
-  return "";
-});
+import "../../assets/css/markdownstyle.less";
+import useArticle from "../../hook/useArticle";
+import articleReadingProgress from "../../hook/articleReadingProgress";
 
-const asideUrl = computed(() => {
-  let tempPath = articleUrl.value.split("/").slice(0, -1).join("/");
-  if (tempPath == "/notebook" || tempPath == "")
-    return "/data/notebook/index.json";
-  return "/data" + tempPath + "/index.json";
-});
-const asideData = useAjax(asideUrl)["data"];
-const aside = computed(() => {
-  if (asideData.value) {
-    return asideData.value["files"];
-  }
-  return null;
-});
+import { ref, watch, onMounted, nextTick } from "vue";
 
-watch(
-  () => route.path,
-  (to) => {
-    if (!to.startsWith("/notebook")) return;
-    if (to.includes(".md")) {
-      articleUrl.value = to;
-      articleTitle.value = decodeURIComponent(
-        to.slice(to.lastIndexOf("/") + 1, -3)
-      );
-    } else {
-      articleTitle.value = decodeURIComponent(
-        to.slice(to.lastIndexOf("/") + 1)
-      );
-      articleUrl.value = to + "/index.md";
-    }
-  },
-  { immediate: true }
-);
-
-// 文档所有标题
-const titles = computed(() => {
-  let matchTitles = articleContent.value.match(/<h\d id=(.*)<\/h\d>/g);
-  if (!matchTitles) return;
-  return matchTitles.map((e) => {
-    let temp = e.match(/(h\d) id="(.*?)"/);
-    return {
-      title: temp[2],
-      h: temp[1],
-    };
-  });
-});
-
-// 阅读进度与锚点
-// 需要完善视口的判定
-const ArticleMain = ref(null);
-const titleIndex = ref(0);
-const progress = {
-  doms: [],
-  index: 0,
-  length: 0,
-  viewHeight: window.innerHeight / 2,
-  init() {
-    // 路由变化时,接收完数据后触发
-    this.doms = ArticleMain.value.querySelectorAll("h1, h2, h3, h4, h5, h6");
-    this.length = this.doms.length;
-    this.index = 0;
-    titleIndex.value = 0;
-  },
-  changeIndex(index) {
-    this.index = index;
-    this.doms[this.index].scrollIntoView(true);
-  },
-  titleTop() {
-    return this.doms[this.index].getBoundingClientRect().top;
-  },
-  titleBottom() {
-    return this.doms[this.index].getBoundingClientRect().bottom;
-  },
-  viewUp() {
-    if (this.index >= this.length - 1) return;
-    if (this.titleBottom() < this.viewHeight) this.index++;
-  },
-  viewDown() {
-    if (this.index <= 0) return;
-    if (this.titleTop() > this.viewHeight) this.index--;
-  },
-  listener() {
-    this.viewUp();
-    this.viewDown();
-    if (titleIndex.value != this.index) {
-      titleIndex.value = this.index;
-    }
-  },
-};
-
-watch(articleContent, () => {
-  nextTick(() => {
-    progress.init(); // 初始化阅读进度
-  });
-});
-
-function changeTitleIndex(index) {
-  progress.changeIndex(index);
-}
-
-function progressListener() {
-  progress.listener();
-}
-
-onMounted(() => {
-  window.addEventListener("scroll", progressListener);
-});
-
-onUnmounted(() => {
-  window.removeEventListener("scroll", progressListener);
-});
+// 文档数据
+const { articleUrl, articleTitle, articleContent, aside, titles } =
+  useArticle();
 
 // is-loading 是否出现
 const isLoading = ref(true);
 watch([articleUrl, articleContent], (v, o) => {
   isLoading.value = v[0] == o[0] ? false : true;
 });
+
+// 阅读进度
+const ArticleMain = ref(null);
+const { progress, titleIndex, changeTitleIndex } =
+  articleReadingProgress(ArticleMain);
+watch(
+  articleContent,
+  () => {
+    nextTick(() => {
+      progress.init();
+      //   console.log(progress.criticalHeight);
+      // console.log(progress.titleDoms);
+    });
+  },
+  { immediate: true }
+);
+function eChangeTitleIndex(index) {
+  changeTitleIndex(index);
+}
 </script>
 
 <template>
@@ -153,8 +55,8 @@ watch([articleUrl, articleContent], (v, o) => {
 
     <ArticleTitlesAside
       :titles="titles"
-      :activeTitleIndex="titleIndex"
-      @change-title-index="changeTitleIndex"
+      :title-index="titleIndex"
+      @changeTitleIndex="eChangeTitleIndex"
     ></ArticleTitlesAside>
   </div>
 </template>
@@ -178,8 +80,11 @@ watch([articleUrl, articleContent], (v, o) => {
 
   .article-main {
     padding-top: 16px;
-    padding-bottom: 6em;
     position: relative;
+
+    .markdownstyle {
+      padding-bottom: 6em;
+    }
 
     .is-loading {
       height: calc(80vh - 11em);
@@ -246,7 +151,6 @@ watch([articleUrl, articleContent], (v, o) => {
     .article-main {
       padding-left: 2.5em;
       padding-right: 2.5em;
-      padding-bottom: 20vh;
     }
   }
 }

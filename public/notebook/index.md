@@ -1,10 +1,4 @@
-# notebook 文档
-<h3><a style="color: tomato; border-bottom: 2px dashed tomato;" href="#/notebook/未分类">未分类</a></h3>
-
-> - 状态更改：2023/02/02 20:56:35
-> - 最近修改：2023/02/11 21:39:01
-> - 最近访问：2023/02/12 16:28:33
-
+[未分类](#/notebook/未分类)
 
 &emsp;&emsp;&emsp;&emsp;推荐阅读：
 
@@ -16,46 +10,33 @@
 
 &emsp;&emsp;&emsp;&emsp;23/02/04 14:52&ensp;[测试鼠标移至该卡片上长标题滚动测试](#/notebook/未分类/测试鼠标移至该卡片上长标题滚动测试.md)
 
-<br /><h3><a style="color: tomato; border-bottom: 2px dashed tomato;" href="#/notebook/前端">前端</a></h3>
-
-> - 状态更改：2023/02/05 19:19:17
-> - 最近修改：2023/02/09 18:29:36
-> - 最近访问：2023/02/12 16:28:33
-
+[前端](#/notebook/前端)
 
 &emsp;&emsp;&emsp;&emsp;推荐阅读：
 
-&emsp;&emsp;&emsp;&emsp;23/02/07 12:20&ensp;[01_HTML](#/notebook/前端/01_HTML.md)
+&emsp;&emsp;&emsp;&emsp;23/02/07 15:35&ensp;[CSS](#/notebook/前端/CSS.md)
 
-&emsp;&emsp;&emsp;&emsp;23/02/07 15:35&ensp;[02_CSS](#/notebook/前端/02_CSS.md)
+&emsp;&emsp;&emsp;&emsp;23/02/07 12:20&ensp;[HTML](#/notebook/前端/HTML.md)
 
-&emsp;&emsp;&emsp;&emsp;23/02/09 18:29&ensp;[03_JavaScript](#/notebook/前端/03_JavaScript.md)
+&emsp;&emsp;&emsp;&emsp;23/02/09 18:29&ensp;[JavaScript](#/notebook/前端/JavaScript.md)
 
-<br /><h3><a style="color: tomato; border-bottom: 2px dashed tomato;" href="#/notebook/Vue3">Vue3</a></h3>
-
-> - 状态更改：2022/06/24 21:35:12
-> - 最近修改：2023/02/09 15:57:13
-> - 最近访问：2023/02/12 16:28:33
-
+[Vue 系列](#/notebook/Vue%20系列)
 
 &emsp;&emsp;&emsp;&emsp;推荐阅读：
 
-&emsp;&emsp;&emsp;&emsp;23/02/02 20:54&ensp;[deploy](#/notebook/Vue3/deploy.md)
+&emsp;&emsp;&emsp;&emsp;23/02/02 20:54&ensp;[deploy脚本](#/notebook/Vue%20系列/deploy脚本.md)
 
-&emsp;&emsp;&emsp;&emsp;22/09/15 19:53&ensp;[dist本地测试](#/notebook/Vue3/dist本地测试.md)
+&emsp;&emsp;&emsp;&emsp;23/02/17 16:19&ensp;[dist本地测试](#/notebook/Vue%20系列/dist本地测试.md)
 
-&emsp;&emsp;&emsp;&emsp;23/01/28 11:01&ensp;[github](#/notebook/Vue3/github.md)
+&emsp;&emsp;&emsp;&emsp;23/02/17 16:20&ensp;[github的output问题](#/notebook/Vue%20系列/github的output问题.md)
 
-<br /><h3><a style="color: tomato; border-bottom: 2px dashed tomato;" href="#/notebook/Python">Python</a></h3>
+&emsp;&emsp;&emsp;&emsp;23/02/17 19:43&ensp;[vite](#/notebook/Vue%20系列/vite.md)
 
-> - 状态更改：2023/01/28 20:42:09
-> - 最近修改：2023/02/09 15:57:13
-> - 最近访问：2023/02/12 16:28:33
-
+[Python](#/notebook/Python)
 
 &emsp;&emsp;&emsp;&emsp;推荐阅读：
 
-&emsp;&emsp;&emsp;&emsp;23/01/28 20:42&ensp;[jupyter notebook](#/notebook/Python/jupyter-notebook.md)
+&emsp;&emsp;&emsp;&emsp;23/01/28 20:42&ensp;[jupyter notebook](#/notebook/Python/jupyter%20notebook.md)
 
 &emsp;&emsp;&emsp;&emsp;23/01/28 20:42&ensp;[pandas常用方法](#/notebook/Python/pandas常用方法.md)
 
@@ -65,4 +46,3 @@
 
 &emsp;&emsp;&emsp;&emsp;23/01/28 20:42&ensp;[模块pathlib](#/notebook/Python/模块pathlib.md)
 
-<br />

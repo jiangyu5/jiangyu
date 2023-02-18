@@ -7,22 +7,17 @@ export default [
     meta: {
       title: "首页",
       nav: true,
+      nav_index: 1,
     },
   },
   {
-    path: "/notebook",
+    path: "/notebook/:article*",
     name: "Notebook",
     component: () => import("../pages/Article/indexArticle.vue"),
     meta: {
-        title: '笔记',
-        nav: true
+      title: "笔记",
+      nav: true,
     },
-    children: [
-      {
-        path: ":catalogue(.*)",
-        component: () => import("../pages/Article/indexArticle.vue"),
-      },
-    ],
   },
   {
     path: "/catalogue",

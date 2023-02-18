@@ -16,19 +16,17 @@ def str_time(times):
 
 
 def get_md(data):
-    md = f'# {data["name"]} 文档\n'
+    md = ''
     files = data['files']
     for n in files:
-        md += f'<h3><a style="color: tomato; border-bottom: 2px dashed tomato;" href="#{n["path"].replace(" ", "-")}">{n["name"]}</a></h3>\n\n'
-        md += f'> - 状态更改：{n["ctime"]}\n'
-        md += f'> - 最近修改：{n["mtime"]}\n'
-        md += f'> - 最近访问：{n["atime"]}\n\n'
         if n['type'] == 'dir':
-            md += f'\n&emsp;&emsp;&emsp;&emsp;推荐阅读：\n\n'
+            md += f'[{n["name"]}](#{n["path"].replace(" ", "%20")})\n\n'
+            md += f'&emsp;&emsp;&emsp;&emsp;推荐阅读：\n\n'
             for i in n['files']:
-                md += f'&emsp;&emsp;&emsp;&emsp;{i["mtime"][2:-3]}&ensp;[{i["name"]}](#{i["path"].replace(" ", "-")})\n\n'
+                md += f'&emsp;&emsp;&emsp;&emsp;{i["mtime"][2:-3]}&ensp;[{i["name"]}](#{i["path"].replace(" ", "%20")})\n\n'
+        else:
+            md += f'{n["mtime"][2:-3]}&ensp;[{n["name"]}](#{n["path"].replace(" ", "%20")})\n\n'
 
-        md += '<br />'
     return md
 
 

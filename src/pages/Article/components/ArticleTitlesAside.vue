@@ -1,10 +1,12 @@
 <script setup>
+import { ref, watch, nextTick } from "vue";
+
 const props = defineProps({
   titles: {
     type: Object,
     default: [],
   },
-  activeTitleIndex: {
+  titleIndex: {
     type: Number,
     default: 0,
   },
@@ -12,18 +14,53 @@ const props = defineProps({
 
 const emits = defineEmits(["changeTitleIndex"]);
 function gotoAnchor(index) {
-    emits("changeTitleIndex", index);
-  return "";
+  emits("changeTitleIndex", index);
 }
+
+function activeClass(index) {
+  return props.titleIndex != index ? "" : "active";
+}
+
+// 矫正标题的位置
+const UL = ref(null);
+const CONTAINER = ref(null);
+const titleDoms = [];
+watch(
+  () => props.titles,
+  () => {
+    titleDoms.length = 0;
+    if (!UL.value) return;
+    nextTick(() => {
+      [...UL.value.children].forEach((el) => titleDoms.push(el));
+    });
+  }
+);
+
+watch(
+  () => props.titleIndex,
+  (index) => {
+    if (!index || !titleDoms) return;
+    let clientHeight = CONTAINER.value.clientHeight;
+    if (
+      clientHeight + CONTAINER.value.scrollTop ===
+      CONTAINER.value.scrollHeight
+    )
+      return;
+    CONTAINER.value.scrollTo({
+      top: titleDoms[index].offsetTop - clientHeight / 3,
+      behavior: "smooth",
+    });
+  }
+);
 </script>
 
 <template>
-  <div class="article-titles-aside">
+  <div class="article-titles-aside" ref="CONTAINER">
     <div class="article-catalog-header">目录</div>
-    <ul>
+    <ul ref="UL">
       <li
         v-for="(title, index) in props.titles"
-        :class="[title.h, { active: activeTitleIndex == index }]"
+        :class="[title.h, activeClass(index)]"
         @click="gotoAnchor(index)"
       >
         {{ title.title }}
@@ -35,6 +72,7 @@ function gotoAnchor(index) {
 <style scoped lang="less">
 .article-titles-aside {
   font-size: 0.9em;
+  position: relative;
   .article-catalog-header {
     font-weight: 600;
     font-size: 1.5em;
@@ -43,7 +81,7 @@ function gotoAnchor(index) {
 
   ul {
     // max-width: 150px;
-    overflow: auto;
+    overflow-y: auto;
 
     li {
       font-weight: normal;

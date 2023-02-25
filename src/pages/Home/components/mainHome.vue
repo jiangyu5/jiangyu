@@ -4,6 +4,13 @@ import IntroductoryCard from "./IntroductoryCard.vue";
 import HomeTop from "./HomeTop.vue";
 const cards = [
   {
+    title: "简版 网易云音乐",
+    catologue: "作品",
+    href: 'https://github.com/jiangyu5/netease-cloud-music',
+    introduction: "网页版网易云音乐。Vite + Vue + BootStrap 5，图标素材阿里图标，API 地址见作品 README。",
+    imgUrl: "/assets/imgs/pc1.png",
+  },
+  {
     title: "文档",
     catologue: "笔记本",
     url: "notebook/",
@@ -39,8 +46,6 @@ cards.forEach((e, index) => {
   //   e["imgUrl"] = defaultImg;
   e["num"] = index;
 });
-
-
 </script>
 
 <template>

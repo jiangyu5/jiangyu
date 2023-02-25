@@ -15,8 +15,8 @@ const props = defineProps({
     default: "测试文本".repeat(1),
   },
   url: { type: String, default: "#" },
+  href: "",
   imgUrl: {
-    type: String,
     default: "",
   },
   reverse: {
@@ -55,11 +55,20 @@ const imgBg = computed(() => {
   return decoration[props.num % length];
 });
 
+// 区分图片
+const imgUrlMain = computed(() => {
+  return typeof props.imgUrl == "string" ? props.imgUrl : props.imgUrl[0];
+});
+
+const imgUrlSub = computed(() => {
+  return typeof props.imgUrl == "string" ? null : props.imgUrl[1];
+});
+
 // 介绍部分的动画效果
 const cardTop = ref(0); // scroll 卷起部分
 watch(cardTop, (top) => {
   let height = window.innerHeight;
-  if (top > height || top <= -height/2) return;
+  if (top > height || top <= -height / 2) return;
   let translateXValue = props.reverse
     ? -(top * 30) / height
     : (top * 30) / height;
@@ -87,8 +96,9 @@ onUnmounted(() => {
         :style="decorationStyle"
       ></div>
       <div class="left img">
-        <div v-if="!imgUrl" :class="imgBg"></div>
-        <img v-else :src="imgUrl" alt="图片" />
+        <div v-if="!imgUrlMain" :class="imgBg"></div>
+        <img v-else :src="imgUrlMain" alt="图片" />
+        <!-- <img v-if="imgUrlSub" class="img-sub" :src="imgUrlSub" /> -->
       </div>
       <div class="right introduction" :style="introductionStyle">
         <h5>{{ props.catologue }}</h5>
@@ -96,7 +106,11 @@ onUnmounted(() => {
         <div>
           {{ props.introduction }}
         </div>
-        <router-link :to="props.url"> 了解更多<span>→</span> </router-link>
+        <router-link v-if="props.url != '#'" :to="props.url">
+          了解更多<span>→</span>
+        </router-link>
+        <a v-else-if="props.href" :href="props.href">作品地址<span>→</span></a>
+
         <div
           class="decoration"
           :class="decorationClass"
@@ -117,20 +131,24 @@ onUnmounted(() => {
   padding-left: 0.5em;
   padding-right: 0.5em;
   display: flex;
-  overflow: hidden;
+  //   overflow: hidden;
   .container {
-    // background-color: rgba(0, 0, 0, 0);
     position: relative;
     margin: auto;
+    img {
+      display: block;
+      object-position: 30% bottom;
+      object-fit: cover;
+    }
     .img {
       position: absolute;
-      top: 0;
-      left: 0;
-      min-height: 200px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
 
-      div,
+      .imgBg,
       img {
-        width: 260px;
+        width: 300px;
         height: 200px;
         border-radius: 5px;
         background: var(--main-1);
@@ -197,12 +215,6 @@ onUnmounted(() => {
           rgb(32, 227, 178),
           rgb(41, 255, 198)
         );
-      }
-
-      img {
-        display: block;
-        object-position: 30% bottom;
-        object-fit: cover;
       }
     }
 
@@ -293,10 +305,14 @@ onUnmounted(() => {
 }
 .reverse {
   background-color: #ffffff00;
+
   .container {
     .img {
-      left: auto;
-      right: 0.5rem;
+      transform: translate(-50%, -50%);
+
+      @media screen and (min-width: 667px) {
+        transform: translate(-30%, -50%) !important;
+      }
     }
 
     .introduction {
@@ -375,11 +391,24 @@ onUnmounted(() => {
     background: rgba(0, 0, 0, 0.1);
   }
 }
+.introductory-card {
+  padding-left: 10%;
+  padding-right: 10%;
 
+  .container .img div {
+    width: 80vw;
+    height: 200px;
+    border-radius: 10px;
+  }
+}
 @media screen and (min-width: 667px) {
-  .introductory-card {
-    padding-left: 10%;
-    padding-right: 10%;
+  .introductory-card .container .img {
+    transform: translate(-70%, -50%);
+
+    div {
+      width: 50vw;
+      height: 200px;
+    }
   }
 }
 
@@ -390,9 +419,8 @@ onUnmounted(() => {
 
     .container {
       .img {
-        div,
         img {
-          width: 400px;
+          width: 550px;
           height: 300px;
           border-radius: 10px;
         }
@@ -414,7 +442,7 @@ onUnmounted(() => {
       .img {
         div,
         img {
-          width: 40vwpx;
+          width: 40vw;
           height: 40vh;
           border-radius: 10px;
         }

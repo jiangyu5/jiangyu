@@ -7,7 +7,7 @@ import "../../assets/css/markdownstyle.less";
 import useArticle from "../../hook/useArticle";
 import articleReadingProgress from "../../hook/articleReadingProgress";
 
-import { ref, watch, onMounted, nextTick } from "vue";
+import { ref, watch, nextTick } from "vue";
 
 // 文档数据
 const { articleUrl, articleTitle, articleContent, aside, titles } =
@@ -28,8 +28,6 @@ watch(
   () => {
     nextTick(() => {
       progress.init();
-      //   console.log(progress.criticalHeight);
-      // console.log(progress.titleDoms);
     });
   },
   { immediate: true }

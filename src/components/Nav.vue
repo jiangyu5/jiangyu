@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed, onMounted, watch } from "vue";
+import { ref, reactive, computed, onMounted, watch, nextTick } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 const router = useRouter();
@@ -10,6 +10,7 @@ const navData = reactive({
 });
 
 const navBarStyle = computed(() => {
+//   if (!navData.value) return "";
   return navData.navs_offset[navData.active_index];
 });
 
@@ -17,12 +18,14 @@ const navBarStyle = computed(() => {
 watch(
   () => route.path,
   (to) => {
-    for (let i in routes) {
-      if (to.includes(routes[i].path)) {
-        navData.active_index = i;
-        break;
+    nextTick(() => {
+      for (let i in routes) {
+        if (to.includes(routes[i].path)) {
+          navData.active_index = i;
+          break;
+        }
       }
-    }
+    });
   }
 );
 
@@ -31,7 +34,7 @@ watch(
 const routes = router.getRoutes().reduce((previousRoute, currentRoute) => {
   if (currentRoute.meta.nav) {
     if (currentRoute.meta.nav_index) {
-      previousRoute.splice(currentRoute.meta.nav_index-1, 0, {
+      previousRoute.splice(currentRoute.meta.nav_index - 1, 0, {
         path: "/" + currentRoute.path.split("/")[1],
         name: currentRoute.name,
         title: currentRoute.meta.title,

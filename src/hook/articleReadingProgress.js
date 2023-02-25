@@ -1,7 +1,7 @@
 import { onMounted, onUnmounted, ref } from "vue";
 
 class readingProgress {
-  criticalHeight = window.innerHeight / 3;
+  criticalHeight = window.innerHeight / 3; // 距离视口顶部的距离，即判定为当前标题的距离
 
   constructor(container) {
     this.container = container;
@@ -49,10 +49,6 @@ class readingProgress {
     return --this.index;
   }
 
-  changeTitleIndex(index) {
-    this.index = index;
-  }
-
   scrollChangeTitleIndex() {
     if (!this.length) return;
     if (this.nextTitleTop() < this.criticalHeight) {
@@ -61,6 +57,10 @@ class readingProgress {
     if (this.currentTitleTop() > this.criticalHeight) {
       this.indexDown();
     }
+  }
+
+  changeTitleIndex(index) {
+    this.index = index;
   }
 
   titleScrollIntoView() {
@@ -105,6 +105,7 @@ export default function (container) {
     window.addEventListener("scroll", scrollChangeTitleIndex);
     window.addEventListener("scroll", refIndex);
   });
+
   onUnmounted(() => {
     window.removeEventListener("scroll", scrollChangeTitleIndex);
     window.removeEventListener("scroll", refIndex);
